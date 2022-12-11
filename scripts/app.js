@@ -1,38 +1,39 @@
 
-const url="https://api.mangadex.org/manga"
-const params={"title": "Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen"}
-
-
-// Top Level call
-fetchMangaDex(url, params)
-    .then((data) => handleMangaDex(data))
-    .then((data) => console.log(data))
-
-
-
+// Top level control
+getMALTabs()
+    .then((chromeTabData) => loader(chromeTabData))
 
 
 // ##########################
 // #    Helper Functions    #
 // ##########################
 
-async function fetchMangaDex(url = '', params = {}) {
-    const response = await fetch(
-        `${url}?${new URLSearchParams(params)}`,
-        {
-            method: 'GET',
-            cache: 'no-cache',
-            mode: 'cors',
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                'Content-Type': 'application/json'
-            }
-        }
-    )
-    return response.json()
+async function getMALTabs() {
+    let queryOptions = { url: ['https://myanimelist.net/anime/*','https://myanimelist.net/manga/*'] };
+    let tab = await chrome.tabs.query(queryOptions);
+    return tab;
 }
 
-function handleMangaDex(mangaJson) {
-    const mangaID = mangaJson['data'][0]['id']
-    return `https://mangadex.org/title/${mangaID}`
+function loader(chromeTabData) {
+    for (i = 0; i < chromeTabData.length; i ++) {
+        let tabData = chromeTabData[i]
+        if (tabData.url.startsWith('https://myanimelist.net/anime')) {
+            launchScript('anime', tabData.id)
+        } else if (tabData.url.startsWith('https://myanimelist.net/manga')) {
+            launchScript('manga', tabData.id)
+        } else {
+            alert("An error has occured")
+            console.log(tabData)
+        }
+    }
 }
+
+function launchScript(type, id) {
+    chrome.scripting.executeScript(
+        {
+            target: {tabId: id},
+            files: (type === 'anime') ? ['scripts/loadAnime.js'] : ['scripts/loadMangaDex.js']
+        }
+    )
+}
+    
