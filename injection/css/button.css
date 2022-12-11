@@ -1,0 +1,35 @@
+@import url(https://fonts.googleapis.com/css?family=Raleway:400&subset=latin,latin-ext);
+
+:root {
+    --md-background: #191a1c;
+    --md-primary: #ff6740;
+    --md-primary-lighten: #ffbead;
+}
+
+.inj-a-tag {
+    margin: auto;
+    width: 100%;
+}
+
+.inj-btn-tag {
+    padding: 3% 8%;
+    width: 100%;
+    margin: 5px auto;
+    border: none;
+    border-radius: 15px;
+    font-size: 13.5px;
+    font-weight: bold;
+    font-family: 'Raleway', 'Verdana', 'Arial';
+    background-color: var(--md-primary);
+    color: var(--md-background);
+    transition: 0.3s;
+}
+
+.inj-btn-tag:hover {
+    cursor: pointer;
+    background-color: var(--md-primary-lighten);
+}
+
+.inj-btn-tag:focus {
+    cursor: pointer;
+}

@@ -3,8 +3,29 @@
     "name": "malConnect",
     "description": "MAL Linking Tool",
     "version": "0.1",
-    "action": {
-        "default_popup": "index.html"
-    },
-    "host_permissions": ["https://api.mangadex.org/*"]
+    "permissions": [
+        "tabs",
+        "scripting",
+        "nativeMessaging"
+    ],
+    "host_permissions": [
+        "https://api.mangadex.org/*",
+        "https://myanimelist.net/anime/*",
+        "https://myanimelist.net/manga/*"
+    ],
+    "content_scripts": [
+        {
+            "matches": ["https://myanimelist.net/anime/*"],
+            "js": ["scripts/content-scripts/loadAnime.js"],
+            "css": ["injection/css/button.css"]
+        },
+        {
+            "matches": ["https://myanimelist.net/manga/*"],
+            "js": ["scripts/content-scripts/loadManga.js"],
+            "css": ["injection/css/button.css"]
+        }
+    ],
+    "background": {
+        "service_worker": "scripts/service-workers/background.js"
+    }
 }
