@@ -11,21 +11,31 @@
     "host_permissions": [
         "https://api.mangadex.org/*",
         "https://myanimelist.net/anime/*",
-        "https://myanimelist.net/manga/*"
+        "https://myanimelist.net/manga/*",
+        "<all_urls>"
     ],
     "content_scripts": [
         {
-            "matches": ["https://myanimelist.net/anime/*"],
-            "js": ["scripts/content-scripts/loadAnime.js"],
-            "css": ["injection/css/button.css"]
-        },
-        {
-            "matches": ["https://myanimelist.net/manga/*"],
-            "js": ["scripts/content-scripts/loadManga.js"],
+            "matches": [
+                "https://myanimelist.net/anime/*",
+                "https://myanimelist.net/manga/*"
+            ],
+            "js": ["scripts/content-scripts/head.js"],
             "css": ["injection/css/button.css"]
         }
     ],
     "background": {
         "service_worker": "scripts/service-workers/background.js"
-    }
+    },
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "scripts/content-scripts/loader.js",
+                "scripts/modules/fetch.js",
+                "scripts/modules/build.js",
+                "https://fonts.googleapis.com/css?family=Poppins:400&subset=latin,latin-ext"
+            ],
+            "matches": [ "<all_urls>" ]
+        }
+    ]
 }

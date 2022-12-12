@@ -1,11 +1,22 @@
-@import url(https://fonts.googleapis.com/css?family=Raleway:400&subset=latin,latin-ext);
-
+@font-face {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    src: url(https://fonts.googleapis.com/css?family=Poppins:400&subset=latin,latin-ext);
+}
 :root {
+    /* MangaDex */
     --md-background: #191a1c;
     --md-primary: #ff6740;
     --md-primary-lighten: #ffbead;
+
+    /* GoGoAnime */
+    --gogo-base: #ffc119;
+    --gogo-lighten: #ffeea3;
+    --gogo-highlight: #00a651;
 }
 
+/* Base Buttons */
 .inj-a-tag {
     margin: auto;
     width: 100%;
@@ -19,17 +30,31 @@
     border-radius: 15px;
     font-size: 13.5px;
     font-weight: bold;
-    font-family: 'Raleway', 'Verdana', 'Arial';
-    background-color: var(--md-primary);
-    color: var(--md-background);
+    font-family: 'Poppins', 'Verdana', 'Arial';
     transition: 0.3s;
 }
 
 .inj-btn-tag:hover {
     cursor: pointer;
-    background-color: var(--md-primary-lighten);
 }
 
 .inj-btn-tag:focus {
     cursor: pointer;
+}
+
+/* Individual Button Stylings */
+.mdex {
+    background-color: var(--md-primary);
+    color: var(--md-background);
+}
+.mdex:hover {
+    background-color: var(--md-primary-lighten);
+}
+
+.gogo {
+    background-color: var(--gogo-base);
+    color: var(--gogo-highlight);
+}
+.gogo:hover {
+    background-color: var(--gogo-lighten)
 }
