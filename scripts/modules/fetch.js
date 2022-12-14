@@ -30,6 +30,7 @@ function fetchMangaDex(targetTitle) {
 
 function fetchNovelUpdates(targetTitle) {
     // Not implemented
+    console.log("Not Implemented")
     return null
 }
 
