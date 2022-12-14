@@ -27,7 +27,7 @@ if (!NYA) {
         // Novel sites: NovelUpdates
         targetTitle =  document.getElementsByClassName('h1-title')[0].childNodes[0].childNodes[0].data;
         fetchNovelUpdates(targetTitle)
-            .then((res) => buildHTML(res));
+            .then((res) => buildHTML("NovelUpdates", res));
     } else {
         // Anime/Movie sites: GoGoAnime
         targetTitle = document.getElementsByClassName('h1_bold_none')[0].textContent;

@@ -28,10 +28,10 @@ function fetchMangaDex(targetTitle) {
     );
 }
 
-function fetchNovelUpdates(targetTitle) {
+async function fetchNovelUpdates(targetTitle) {
     // Not implemented
     console.log("Not Implemented")
-    return null
+    return { msg : "invalid" }
 }
 
 export { fetchGoGoAnime, fetchMangaDex, fetchNovelUpdates }

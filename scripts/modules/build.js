@@ -1,9 +1,16 @@
 
 function buildHTML(source, data) {
+
+    // Obtain targets
     const domTarget = document.getElementsByClassName('leftside')[0];
     const referenceObject = domTarget.children[1];
     let malWatchButton = document.getElementById('broadcast-block')
     var htmlButton;
+    
+    // Check if data is available
+    if (!data) { source = "Unavailable" }
+
+    // Selectively build buttons
     if (source === "MangaDex") {
         const mangaID = data['data'][0]['id'];
         htmlButton = createButton('MangaDex', `https://mangadex.org/title/${mangaID}`)
@@ -13,6 +20,8 @@ function buildHTML(source, data) {
     } else {
         htmlButton = createButton(null, null)
     }
+
+    // Insertion
     domTarget.insertBefore(htmlButton, referenceObject);
     if (malWatchButton) { malWatchButton.remove() };
 }
