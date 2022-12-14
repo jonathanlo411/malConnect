@@ -12,7 +12,7 @@
         "https://api.mangadex.org/*",
         "https://myanimelist.net/anime/*",
         "https://myanimelist.net/manga/*",
-        "<all_urls>"
+        "https://ww3.gogoanime2.org/search/*"
     ],
     "content_scripts": [
         {
