@@ -8,7 +8,7 @@ function buildHTML(source, data) {
     var htmlButton;
     
     // Check if data is available
-    if (!data) { source = "Unavailable" }
+    if (!data || (data.msg && data.msg === 'invalid')) { source = "Unavailable" }
 
     // Selectively build buttons
     if (source === "MangaDex") {

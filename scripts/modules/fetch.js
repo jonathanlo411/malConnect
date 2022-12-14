@@ -34,4 +34,16 @@ async function fetchNovelUpdates(targetTitle) {
     return { msg : "invalid" }
 }
 
-export { fetchGoGoAnime, fetchMangaDex, fetchNovelUpdates }
+// Checks the response to see if there are results; If not, re attempt API call with alt title
+async function checkResponse(sourceType, res, backupTitle) {
+    if (sourceType === "MangaDex") {
+        if (res['data'].length === 0) {
+            // If second attempt, return unavailable button
+            if (backupTitle === "Final") { return { msg : "invalid" } }
+            var backupRes = await fetchMangaDex(backupTitle)
+            return checkResponse("MangaDex", backupRes, "Final");
+        } else { return res };
+    }
+}
+
+export { fetchGoGoAnime, fetchMangaDex, fetchNovelUpdates, checkResponse }
