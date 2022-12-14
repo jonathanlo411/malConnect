@@ -1,6 +1,7 @@
-# malConnect
-A Chrome Extension that provides links on MAL pages to instantly Watch or Read.
 
-## Design
-A low fidelity overview on how it works.
-![](https://cdn.discordapp.com/attachments/671926160812146698/1051745201464553512/malConnect-1.jpg)
+# malConnect
+malConnect is a chrome extension that aims to provide easy links to watch and read the content available on MyAnimeList.
+
+## Overview
+malConnect will query various sites to return the source. The user will see a button below the poster which, when clicked, will open another window to that site where the user can watch or read.
+![](https://cdn.discordapp.com/attachments/942218891952783421/1052681172485951488/image.png)
