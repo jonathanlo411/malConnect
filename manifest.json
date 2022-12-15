@@ -10,9 +10,6 @@
         "128": "assets/meta/logo128.png"
     },
     "permissions": [
-        "tabs",
-        "scripting",
-        "nativeMessaging"
     ],
     "host_permissions": [
         "https://api.mangadex.org/*",
