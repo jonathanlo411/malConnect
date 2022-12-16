@@ -16,7 +16,8 @@ function fetchGoGoAnime(targetTitle) {
 function fetchMangaDex(targetTitle) {
     // Obtain Manga data
     const urlMangaDex ="https://api.mangadex.org/manga"
-    const params={"title": targetTitle}
+    const params={"title": targetTitle, "order[followedCount]": "desc"}
+    console.log(`${urlMangaDex}?${new URLSearchParams(params)}`)
 
     // Send message to background runtime to fetch MangaDex
     return chrome.runtime.sendMessage(

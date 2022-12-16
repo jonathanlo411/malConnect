@@ -25,16 +25,16 @@ if (!NYA) {
         targetTitle = document.getElementsByClassName('h1-title')[0].childNodes[0].childNodes[0].data;
         fetchMangaDex(targetTitle)
             .then((res) => checkResponse("MangaDex", res, backupTitle))
-            .then((res) => buildHTML("MangaDex", res));
+            .then((res) => buildHTML("MangaDex", res, targetTitle));
     } else if (novel.includes(sourceType)) {
         // Novel sites: NovelUpdates
         targetTitle =  document.getElementsByClassName('h1-title')[0].childNodes[0].childNodes[0].data;
         fetchNovelUpdates(targetTitle)
-            .then((res) => buildHTML("NovelUpdates", res));
+            .then((res) => buildHTML("NovelUpdates", res, targetTitle));
     } else {
         // Anime/Movie sites: GoGoAnime
         targetTitle = document.getElementsByClassName('h1_bold_none')[0].textContent;
         fetchGoGoAnime(targetTitle)
-            .then((res) => buildHTML("GoGoAnime", res));
+            .then((res) => buildHTML("GoGoAnime", res, targetTitle));
     }
 }
