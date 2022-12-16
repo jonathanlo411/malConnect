@@ -36,6 +36,7 @@
                 "scripts/content-scripts/loader.js",
                 "scripts/modules/fetch.js",
                 "scripts/modules/build.js",
+                "scripts/modules/fuse6.6.2.js",
                 "https://fonts.googleapis.com/css?family=Poppins:400&subset=latin,latin-ext"
             ],
             "matches": [ "<all_urls>" ]
