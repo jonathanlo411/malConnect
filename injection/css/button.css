@@ -10,6 +10,11 @@
     --md-primary: #ff6740;
     --md-primary-lighten: #ffbead;
 
+    /* Manganelo */
+    --mglo-background: #7cc4ca;
+    --mglo-background-lighten: #92e6ee;
+    --mglo-primary: #ec5c54;
+
     /* GoGoAnime */
     --gogo-base: #ffc119;
     --gogo-lighten: #ffeea3;
@@ -49,6 +54,14 @@
 }
 .mdex:hover {
     background-color: var(--md-primary-lighten);
+}
+
+.mglo {
+    background-color: var(--mglo-background);
+    color: black;
+}
+.mglo:hover {
+    background-color: var(--mglo-background-lighten);
 }
 
 .gogo {

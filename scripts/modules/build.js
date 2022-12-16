@@ -15,6 +15,9 @@ function buildHTML(source, data, targetTitle) {
     if (source === "MangaDex") {
         const mangaID = removeMDNonOfficial(data)[0].id //searchData(data, targetTitle, "json");
         htmlButton = createButton('MangaDex', `https://mangadex.org/title/${mangaID}`)
+    } else if (source === "Manganelo"){
+        const url = scrapeManganelo(data)
+        htmlButton = createButton('Manganelo', url)
     } else if (source === "GoGoAnime") {
         const url = scrapeGoGoAnime(data)
         htmlButton = createButton('GoGoAnime', url)
@@ -35,6 +38,11 @@ function createButton(context, url) {
         html = `
         <a href="${url}" target="_blank" rel="noopener noreferrer" class="inj-a-tag">
             <button class="inj-btn-tag mdex">Read on MangaDex</button>
+        </a>`.trim();
+    } else if (context === 'Manganelo') {
+        html = `
+        <a href="${url}" target="_blank" rel="noopener noreferrer" class="inj-a-tag">
+            <button class="inj-btn-tag mglo">Read on Manganelo</button>
         </a>`.trim();
     } else if (context === "GoGoAnime") {
         html = `
@@ -70,13 +78,21 @@ function scrapeGoGoAnime(stringHTML) {
     return `https://ww3.gogoanime2.org/${animeLink.replace("https://myanimelist.net/", "")}`
 }
 
+function scrapeManganelo(stringHTML) {
+    // Load GoGoAnime DOM
+    var parser = new DOMParser();
+    var doc = parser.parseFromString(stringHTML, 'text/html');
+
+    // Parse DOM for non dub results
+    return doc.getElementsByClassName('item-title')[0].href;
+}
+
 // Searches through json to find optimal result; Uses Fuse
 function searchData(data, targetTitle, dataType) {
     if (dataType === "json") {
         const constraints = { includeScore: true, keys: [ "attributes.title.en" ] }
         const fuse = new Fuse(data['data'], constraints)
         const result = fuse.search(targetTitle)
-        console.log(result)
         return (result.length === 0) ? data['data'][0].id : result[0].item.id;
     }
 }
