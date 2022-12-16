@@ -15,7 +15,8 @@
         "https://api.mangadex.org/*",
         "https://myanimelist.net/anime/*",
         "https://myanimelist.net/manga/*",
-        "https://ww3.gogoanime2.org/search/*"
+        "https://ww3.gogoanime2.org/search/*",
+        "https://m.manganelo.com/search/story/*"
     ],
     "content_scripts": [
         {
