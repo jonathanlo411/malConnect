@@ -35,19 +35,31 @@ function createButton(context, url) {
     var button;
     var html;
     if (context === 'MangaDex') {
+        const mdCatLogo = chrome.runtime.getURL('assets/site-logos/md-cat-logo.svg')
+        const mdLogo = chrome.runtime.getURL('assets/site-logos/md-logo.svg')
         html = `
         <a href="${url}" target="_blank" rel="noopener noreferrer" class="inj-a-tag">
-            <button class="inj-btn-tag mdex">Read on MangaDex</button>
+            <button class="inj-btn-tag mdex">
+                <p class="bt-text">Read on</p>
+                <img src="${mdCatLogo}" id="md-cat" />
+                <img src="${mdLogo}" id="md-logo" />
+            </button>
         </a>`.trim();
     } else if (context === 'Manganelo') {
+        const mgloLogo = chrome.runtime.getURL('assets/site-logos/manganelo-logo.png')
         html = `
         <a href="${url}" target="_blank" rel="noopener noreferrer" class="inj-a-tag">
-            <button class="inj-btn-tag mglo">Read on Manganelo</button>
+            <button class="inj-btn-tag mglo">
+                <p class="bt-text">Read on</p>
+                <img src="${mgloLogo}" id="mglo-logo" />
+            </button>
         </a>`.trim();
     } else if (context === "GoGoAnime") {
         html = `
         <a href="${url}" target="_blank" rel="noopener noreferrer" class="inj-a-tag">
-            <button class="inj-btn-tag gogo">Watch on GoGoAnime</button>
+            <button class="inj-btn-tag gogo">
+                <p class="bt-text">Watch on</p>
+            </button>
         </a>`.trim();
     } else {
         html = `
