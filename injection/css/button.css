@@ -5,38 +5,44 @@
     src: url(https://fonts.googleapis.com/css?family=Poppins:400&subset=latin,latin-ext);
 }
 :root {
+    /* MyAnimeList */
+    --mal-primary: #2e51a2;
+
     /* MangaDex */
     --md-background: #191a1c;
-    --md-primary: #ff6740;
+    --md-background-lighten: #191a1cce;
     --md-primary-lighten: #ffbead;
 
     /* Manganelo */
-    --mglo-background: #7cc4ca;
-    --mglo-background-lighten: #92e6ee;
-    --mglo-primary: #ec5c54;
+    --mglo-background-grad-left: rgba(126, 197, 201, 0.75);
+    --mglo-background-right-left: rgba(239, 92, 84, 0.75);
+    --mglo-background-grad-left-full: rgba(126, 197, 201, 1);
+    --mglo-background-right-left-full: rgba(239, 92, 84, 1);
 
     /* GoGoAnime */
-    --gogo-base: #ffc119;
-    --gogo-lighten: #ffeea3;
+    --gogo-background: #1E352F;
+    --gogo-background-darken: #335145;
     --gogo-highlight: #00a651;
 }
 
 /* Base Buttons */
-.inj-a-tag {
+.inj-a-tag,
+.inj-a-tag:visited {
     margin: auto;
     width: 100%;
+    text-decoration: none!important;
 }
 
 .inj-btn-tag {
     padding: 3% 8%;
     width: 100%;
+    height: 45px;
     margin: 5px auto;
     border: none;
-    border-radius: 15px;
-    font-size: 13.5px;
-    font-weight: bold;
+    border-radius: 200px;
     font-family: 'Poppins', 'Verdana', 'Arial';
     transition: 0.3s;
+    display: flex;
 }
 
 .inj-btn-tag:hover {
@@ -47,27 +53,135 @@
     cursor: pointer;
 }
 
+.bt-text,
+.bt-text:visited {
+    margin-top: 5px!important;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.blocked {
+    position: relative;
+}
+.blocked:hover {
+    cursor: not-allowed;
+}
+.blocked::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(256, 256, 256, 0.5);
+    z-index: 1;
+    transition: opacity 0.25s linear;
+    border-radius: 200px;
+}
+.blocked:hover .block-pop {
+    visibility: visible;
+}
+
+.block-pop {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 2;
+    bottom: 120%;
+    left: 25%;
+    margin-left: -60px;
+    opacity: 1!important;
+}
+.block-pop::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
+
 /* Individual Button Stylings */
 .mdex {
-    background-color: var(--md-primary);
-    color: var(--md-background);
+    background-color: var(--md-background);
+    color: #fff;
 }
-.mdex:hover {
-    background-color: var(--md-primary-lighten);
+.mdex.unblocked:hover {
+    background-color: var(--md-background-lighten);
+}
+#md-cat {
+    height: 28px;
+    margin-left: 5px;
+}
+#md-logo {
+    display: inline;
+    height: 20px;
+    margin-top: 5px;
+    margin-left: 1px;
 }
 
 .mglo {
-    background-color: var(--mglo-background);
+    background-image: linear-gradient(
+        to right,
+        var(--mglo-background-grad-left),
+        var(--mglo-background-right-left)
+    );
+    border: 1px solid black;
     color: black;
+    z-index: 1;
+    position: relative;
 }
-.mglo:hover {
-    background-color: var(--mglo-background-lighten);
+.mglo::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-image: linear-gradient(
+        to right,
+        var(--mglo-background-grad-left-full),
+        var(--mglo-background-right-left-full)
+    );
+    z-index: -1;
+    transition: opacity 0.25s linear;
+    opacity: 0;
+    border-radius: 200px;
+}
+.mglo.unblocked:hover::before {
+    opacity: 1;
+}
+#mglo-logo {
+    height: 50px;
+    position: absolute;
+    transform: translate(65%, -10px);
 }
 
 .gogo {
-    background-color: var(--gogo-base);
-    color: var(--gogo-highlight);
+    background-color: var(--gogo-background);
+    color: #fff;
 }
-.gogo:hover {
-    background-color: var(--gogo-lighten)
+.gogo.unblocked:hover {
+    background-color: var(--gogo-background-darken)
+}
+#gga-logo {
+    height: 30px;
+    margin-left: 17px;
+}
+
+.err {
+    background-color: var(--mal-primary);
+}
+.err p {
+    flex-grow: 1;
+    color: white;
+    text-align: center;
 }
