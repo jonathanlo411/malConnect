@@ -5,6 +5,9 @@
     src: url(https://fonts.googleapis.com/css?family=Poppins:400&subset=latin,latin-ext);
 }
 :root {
+    /* MyAnimeList */
+    --mal-primary: #2e51a2;
+
     /* MangaDex */
     --md-background: #191a1c;
     --md-background-lighten: #191a1cce;
@@ -17,8 +20,8 @@
     --mglo-background-right-left-full: rgba(239, 92, 84, 1);
 
     /* GoGoAnime */
-    --gogo-base: #ffc119;
-    --gogo-lighten: #ffeea3;
+    --gogo-background: #1E352F;
+    --gogo-background-darken: #335145;
     --gogo-highlight: #00a651;
 }
 
@@ -58,12 +61,60 @@
     text-decoration: none;
 }
 
+.blocked {
+    position: relative;
+}
+.blocked:hover {
+    cursor: not-allowed;
+}
+.blocked::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(256, 256, 256, 0.5);
+    z-index: 1;
+    transition: opacity 0.25s linear;
+    border-radius: 200px;
+}
+.blocked:hover .block-pop {
+    visibility: visible;
+}
+
+.block-pop {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 2;
+    bottom: 120%;
+    left: 25%;
+    margin-left: -60px;
+    opacity: 1!important;
+}
+.block-pop::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
+
 /* Individual Button Stylings */
 .mdex {
     background-color: var(--md-background);
     color: #fff;
 }
-.mdex:hover {
+.mdex.unblocked:hover {
     background-color: var(--md-background-lighten);
 }
 #md-cat {
@@ -104,8 +155,8 @@
     transition: opacity 0.25s linear;
     opacity: 0;
     border-radius: 200px;
-  }
-.mglo:hover::before {
+}
+.mglo.unblocked:hover::before {
     opacity: 1;
 }
 #mglo-logo {
@@ -115,9 +166,22 @@
 }
 
 .gogo {
-    background-color: var(--gogo-base);
-    color: var(--gogo-highlight);
+    background-color: var(--gogo-background);
+    color: #fff;
 }
-.gogo:hover {
-    background-color: var(--gogo-lighten)
+.gogo.unblocked:hover {
+    background-color: var(--gogo-background-darken)
+}
+#gga-logo {
+    height: 30px;
+    margin-left: 17px;
+}
+
+.err {
+    background-color: var(--mal-primary);
+}
+.err p {
+    flex-grow: 1;
+    color: white;
+    text-align: center;
 }

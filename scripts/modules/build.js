@@ -9,20 +9,22 @@ function buildHTML(source, data, targetTitle) {
     var htmlButton;
     
     // Check if d*ata is available
-    if (!data || (data.msg && data.msg === 'invalid')) { source = "Unavailable" }
-
-    // Selectively build buttons
-    if (source === "MangaDex") {
-        const mangaID = removeMDNonOfficial(data)[0].id //searchData(data, targetTitle, "json");
-        htmlButton = createButton('MangaDex', `https://mangadex.org/title/${mangaID}`)
-    } else if (source === "Manganelo"){
-        const url = scrapeManganelo(data)
-        htmlButton = createButton('Manganelo', url)
-    } else if (source === "GoGoAnime") {
-        const url = scrapeGoGoAnime(data)
-        htmlButton = createButton('GoGoAnime', url)
+    if (!data || (data.msg && data.msg === 'invalid')) { 
+        htmlButton = createButton(source, "")
     } else {
-        htmlButton = createButton(null, null)
+        // Selectively build buttons
+        if (source === "MangaDex") {
+            const mangaID = removeMDNonOfficial(data)[0].id //searchData(data, targetTitle, "json");
+            htmlButton = createButton('MangaDex', `https://mangadex.org/title/${mangaID}`)
+        } else if (source === "Manganelo"){
+            const url = scrapeManganelo(data)
+            htmlButton = createButton('Manganelo', url)
+        } else if (source === "GoGoAnime") {
+            const url = scrapeGoGoAnime(data)
+            htmlButton = createButton('GoGoAnime', url)
+        } else {
+            htmlButton = createButton(null, null)
+        }
     }
 
     // Insertion
@@ -31,40 +33,68 @@ function buildHTML(source, data, targetTitle) {
 }
 
 function createButton(context, url) {
+    const dataError = url === "";
     var template = document.createElement('template');
     var button;
     var html;
     if (context === 'MangaDex') {
         const mdCatLogo = chrome.runtime.getURL('assets/site-logos/md-cat-logo.svg')
         const mdLogo = chrome.runtime.getURL('assets/site-logos/md-logo.svg')
-        html = `
+        html = (!dataError) ? `
         <a href="${url}" target="_blank" rel="noopener noreferrer" class="inj-a-tag">
-            <button class="inj-btn-tag mdex">
+            <button class="inj-btn-tag mdex unblocked">
                 <p class="bt-text">Read on</p>
                 <img src="${mdCatLogo}" id="md-cat" />
                 <img src="${mdLogo}" id="md-logo" />
             </button>
+        </a>`.trim() : `
+        <aclass="inj-a-tag">
+            <button class="inj-btn-tag mdex blocked">
+                <p class="bt-text">Read on</p>
+                <img src="${mdCatLogo}" id="md-cat" />
+                <img src="${mdLogo}" id="md-logo" />
+                <span class="block-pop">No Data on MangaDex</span>
+            </button>
         </a>`.trim();
     } else if (context === 'Manganelo') {
         const mgloLogo = chrome.runtime.getURL('assets/site-logos/manganelo-logo.png')
-        html = `
+        html = (!dataError) ? `
         <a href="${url}" target="_blank" rel="noopener noreferrer" class="inj-a-tag">
-            <button class="inj-btn-tag mglo">
+            <button class="inj-btn-tag mglo unblocked">
                 <p class="bt-text">Read on</p>
                 <img src="${mgloLogo}" id="mglo-logo" />
             </button>
+        </a>`.trim() : `
+        <a class="inj-a-tag">
+            <button class="inj-btn-tag mglo blocked">
+                <p class="bt-text">Read on</p>
+                <img src="${mgloLogo}" id="mglo-logo" />
+                <span class="block-pop">No Data on Manganelo</span>
+            </button>
         </a>`.trim();
     } else if (context === "GoGoAnime") {
-        html = `
+        const ggALogo = chrome.runtime.getURL('assets/site-logos/gogoanime-logo.png')
+        html = (!dataError) ? `
         <a href="${url}" target="_blank" rel="noopener noreferrer" class="inj-a-tag">
-            <button class="inj-btn-tag gogo">
+            <button class="inj-btn-tag gogo unblocked">
                 <p class="bt-text">Watch on</p>
+                <img src="${ggALogo}" id="gga-logo"/>
+            </button>
+        </a>`.trim() : `
+        <a class="inj-a-tag">
+            <button class="inj-btn-tag gogo blocked">
+                <p class="bt-text">Watch on</p>
+                <img src="${ggALogo}" id="gga-logo"/>
+                <span class="block-pop">No Data on GoGoAnime</span>
             </button>
         </a>`.trim();
     } else {
         html = `
-        <a href="" target="_blank" rel="noopener noreferrer" class="inj-a-tag">
-            <button class="inj-btn-tag err">Content Unavailable</button>
+        <a class="inj-a-tag">
+            <button class="inj-btn-tag err blocked">
+            <p class="bt-text">Content Unavailable</p>
+            <span class="block-pop">Feature not Currently Supported</span>
+            </button>
         </a>`.trim();
     }
     template.innerHTML = html;
