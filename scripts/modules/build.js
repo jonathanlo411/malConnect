@@ -22,6 +22,9 @@ function buildHTML(source, data, targetTitle) {
         } else if (source === "GoGoAnime") {
             const url = scrapeGoGoAnime(data)
             htmlButton = createButton('GoGoAnime', url)
+        } else if (source === "YouTube") {
+            const url = parseMALForumJSON(data)
+            htmlButton = createButton("YouTube", url)
         } else {
             htmlButton = createButton(null, null)
         }
@@ -88,6 +91,23 @@ function createButton(context, url) {
                 <span class="block-pop">No Data on GoGoAnime</span>
             </button>
         </a>`.trim();
+    } else if (context === "YouTube") {
+        const ytLogo = chrome.runtime.getURL('assets/site-logos/youtube-logo.svg')
+        html = (!dataError) ? `
+        <a href="${url}" target="_blank" rel="noopener noreferrer" class="inj-a-tag">
+            <button class="inj-btn-tag yt unblocked">
+                <p class="bt-text">Watch on</p>
+                <img src="${ytLogo}" id="yt-logo"/>
+            </button>
+        </a>`.trim() : `
+        <a class="inj-a-tag">
+            <button class="inj-btn-tag yt blocked">
+                <p class="bt-text">Watch on</p>
+                <img src="${ytLogo}" id="yt-logo"/>
+                <span class="block-pop">No Data on YouTube</span>
+            </button>
+        </a>`.trim();
+
     } else {
         html = `
         <a class="inj-a-tag">
@@ -127,6 +147,25 @@ function scrapeManganelo(stringHTML) {
 
     // Parse DOM for non dub results
     return doc.getElementsByClassName('item-title')[0].href;
+}
+
+function parseMALForumJSON(jsonData) {
+    let youtubeVID;
+    for (var i = 0; i < jsonData['data']['posts'].length; i ++) {
+        const textBody = jsonData['data']['posts'][i]['body'];
+        if (textBody.includes('[yt]') && textBody.includes('[/yt]')) {
+            youtubeVID = textBody.match(/\[yt\](.+)\[\/yt\]/gm)[0]
+                .replace("[yt]", "").replace("[/yt]", "");
+            return `https://www.youtube.com/watch?v=${youtubeVID}`
+        } else if (textBody.includes('[YT]') && textBody.includes('[/YT]')) {
+            youtubeVID = textBody.match(/\[YT\](.+)\[\/YT\]/gm)[0]
+                .replace("[YT]", "").replace("[/YT]", "");
+            return `https://www.youtube.com/watch?v=${youtubeVID}`
+        } else if (textBody.includes('https://www.youtube.com/watch?v=')) {
+            return textBody.match(/https:\/\/www\.youtube\.com\/watch\?v=.{11}/gm)
+        }
+    };
+    return "";
 }
 
 // Searches through json to find optimal result; Uses Fuse

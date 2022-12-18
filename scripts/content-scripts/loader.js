@@ -1,14 +1,16 @@
-import { fetchGoGoAnime, fetchMangaDex, fetchManganelo, fetchNovelUpdates, checkResponse } from "../modules/fetch.js";
+import { fetchGoGoAnime, fetchYoutubeMV, fetchMangaDex, fetchManganelo, fetchNovelUpdates, checkResponse } from "../modules/fetch.js";
 import buildHTML from "../modules/build.js"
 
 // Definitions
 const manga = ["Manga", "Manhwa", "Manhua"]
 const novel = ["Novel", "Light Novel"]
+const music = ["Music"]
 var NYA = false;
-let sourceType = document.getElementsByClassName("type")[0].children[0].textContent;
+let sourceType;
 let backupTitleJP;
 let backupTitleEN;
 let targetTitle;
+let forumID;
 
 // Grab backupTitle and If not aired, do not fetch
 var countMax = 10
@@ -19,6 +21,9 @@ for (var infoTag of document.getElementsByClassName('spaceit_pad')) {
     if (infoTag.innerHTML.includes('English:')) { backupTitleEN = infoTag.innerText.replace('English: ', ''); }
     countMax -= 1;
 }
+const baseSourceType = document.getElementsByClassName("type")[0];
+sourceType = (baseSourceType.firstChild.hasChildNodes()) ? baseSourceType.children[0].textContent : baseSourceType.textContent;
+
 
 // Top Level call
 if (!NYA) {
@@ -36,6 +41,17 @@ if (!NYA) {
         targetTitle =  document.getElementsByClassName('h1-title')[0].childNodes[0].childNodes[0].data;
         fetchNovelUpdates(targetTitle)
             .then((res) => buildHTML("NovelUpdates", res, targetTitle));
+    } else if (music.includes(sourceType)) {
+        // Youtube Music Videos for Anime
+        const forumTopics = document.getElementById('forumTopics')
+            .getElementsByClassName('ga-click');
+        for (var i = 0; i < forumTopics.length; i ++) {
+            if (forumTopics[i].textContent.includes("Episode 1")) {
+                forumID = forumTopics[i].href.replace("https://myanimelist.net/forum/?topicid=", "")
+            }
+        }
+        fetchYoutubeMV(forumID)
+            .then((res) => buildHTML("YouTube", res, targetTitle));
     } else {
         // Anime/Movie sites: GoGoAnime
         targetTitle = document.getElementsByClassName('h1_bold_none')[0].textContent;
