@@ -51,6 +51,7 @@ function fetchMangaDex(targetTitle) {
 }
 
 function fetchManganelo(targetTitle) {
+    if ( targetTitle === undefined ) { return { msg: "invalid"} }
     const query = targetTitle.replaceAll(' ', '_').replaceAll(/\W/g, '')
     const urlManganelo = `https://m.manganelo.com/search/story/${query}`
     
