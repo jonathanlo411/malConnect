@@ -9,9 +9,27 @@ function fetchGoGoAnime(targetTitle) {
     // Send message to background runtime to fetch GoGoAnime
     return chrome.runtime.sendMessage(
         {
-            sourceType: "getGoGoAnime",
             requestType: "html",
             url: urlGoGoAnime
+        }
+    );
+}
+
+// Music
+
+async function fetchYoutubeMV(forumID) {
+    const forumMALURL = `https://api.myanimelist.net/v2/forum/topic/${forumID}`;
+    const malData = await fetch(chrome.runtime.getURL("config.json"))
+        .then((res) => (res.json()));
+
+    // Send request to MAL forum API
+    return chrome.runtime.sendMessage(
+        {
+            requestType: "json",
+            url: forumMALURL,
+            headers: {
+                "X-MAL-CLIENT-ID": malData['malClientID']
+            }
         }
     );
 }
@@ -26,7 +44,6 @@ function fetchMangaDex(targetTitle) {
     // Send message to background runtime to fetch MangaDex
     return chrome.runtime.sendMessage(
         {
-            sourceType: "getMangaDex",
             requestType: "json",
             url: `${urlMangaDex}?${new URLSearchParams(params)}`
         }
@@ -40,7 +57,6 @@ function fetchManganelo(targetTitle) {
     // Send messsage to background runtime to fetch manganelo
     return chrome.runtime.sendMessage(
         {
-            sourceType: "getManganelo",
             requestType: "html",
             url: urlManganelo
         }
@@ -79,4 +95,4 @@ async function checkResponse(sourceType, res, backupTitle) {
     }
 }
 
-export { fetchGoGoAnime, fetchMangaDex, fetchManganelo, fetchNovelUpdates, checkResponse }
+export { fetchGoGoAnime, fetchYoutubeMV, fetchMangaDex, fetchManganelo, fetchNovelUpdates, checkResponse }
