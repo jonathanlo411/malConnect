@@ -15,7 +15,7 @@ List of non-affiliated 3rd party sites that malConnect queries.
 	- *TBD: [9anime](https://9anime.pl/)*
 - **Manga**
 	- [MangaDex](https://mangadex.org/)
-	- [Manganelo](https://m.manganelo.com/wwww)
+	- [Manganelo](https://gogoanime.tel/)
 - **Novels**
 	- *TBD: [Novel Updates](https://www.novelupdates.com/)*
 
