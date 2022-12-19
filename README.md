@@ -9,7 +9,7 @@ malConnect is a chrome extension that provides direct links to watch/read the ma
 You can add malConnect to your chrome browser [here](https://chrome.google.com/webstore/detail/malconnect/chjndlglgibbpffohnodhcfohpfegogg).
 
 ## Supported 3rd Party
-List of 3rd party sites that malConnect queries.
+List of non-affiliated 3rd party sites that malConnect queries.
 - **Anime**
 	- [GoGoAnime](https://ww3.gogoanime2.org/)
 	- *TBD: [9anime](https://9anime.pl/)*
