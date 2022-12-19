@@ -4,7 +4,7 @@
 
 function fetchGoGoAnime(targetTitle) {
     const query = targetTitle.replaceAll(' ', '+')
-    const urlGoGoAnime = `https://ww3.gogoanime2.org/search/${query}`
+    const urlGoGoAnime = `https://gogoanime.tel/search.html?keyword=${query}`
 
     // Send message to background runtime to fetch GoGoAnime
     return chrome.runtime.sendMessage(

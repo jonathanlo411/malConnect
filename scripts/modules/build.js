@@ -137,7 +137,8 @@ function scrapeGoGoAnime(stringHTML) {
             break
         }
     }
-    return `https://ww3.gogoanime2.org/${animeLink.replace("https://myanimelist.net/", "")}`
+    console.log(animeLink)
+    return `https://gogoanime.tel/${animeLink.replace("https://myanimelist.net/", "")}`
 }
 
 function scrapeManganelo(stringHTML) {
