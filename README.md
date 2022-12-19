@@ -1,7 +1,26 @@
 
 # malConnect
-malConnect is a chrome extension that aims to provide easy links to watch and read the content available on MyAnimeList.
+![](https://img.shields.io/badge/version-2.0-blue)![](https://img.shields.io/badge/license-MIT-green)
 
 ## Overview
-malConnect will query various sites to return the source. The user will see a button below the poster which, when clicked, will open another window to that site where the user can watch or read.
-![](https://cdn.discordapp.com/attachments/942218891952783421/1052681172485951488/image.png)
+malConnect is a chrome extension that provides direct links to watch/read the material on 3rd party sites directly from the MyAnimeList entry page. The extension will query various sites to return links to the source. Since a request is made each time a user views the MyAnimeList entry page, links are always up to date.
+
+## Installation
+You can add malConnect to your chrome browser [here](https://chrome.google.com/webstore/detail/malconnect/chjndlglgibbpffohnodhcfohpfegogg).
+
+## Supported 3rd Party
+List of 3rd party sites that malConnect queries.
+- **Anime**
+	- [GoGoAnime](https://ww3.gogoanime2.org/)
+	- *TBD: [9anime](https://9anime.pl/)*
+- **Manga**
+	- [MangaDex](https://mangadex.org/)
+	- [Manganelo](https://m.manganelo.com/wwww)
+- **Novels**
+	- *TBD: [Novel Updates](https://www.novelupdates.com/)*
+
+## Sample
+**Buttons located beneath the cover art*
+
+![](https://cdn.discordapp.com/attachments/942218891952783421/1054160445742776330/image.png)
+![](https://cdn.discordapp.com/attachments/942218891952783421/1054162749636227172/image.png)
