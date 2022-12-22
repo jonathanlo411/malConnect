@@ -67,9 +67,16 @@ function fetchManganelo(targetTitle) {
 // --- Novels ---
 
 async function fetchNovelUpdates(targetTitle) {
-    // Not implemented
-    console.log("Not Implemented")
-    return { msg : "invalid" }
+    // Call MangaDex first to see if there is data
+    const jsonMangaDex = await fetchMangaDex(targetTitle);
+    const checkedResponse = await checkResponse("MangaDex", jsonMangaDex, "Final");
+    if (Object.hasOwn(checkedResponse, 'msg') && checkResponse[msg] === "invalid") { return checkedResponse }
+
+    // Parse NovelUpdates data from MangaDex links if NU exits
+    const slugParent = checkedResponse['data'][0]['attributes']['links']
+    if (!Object.hasOwn(slugParent, "nu")) { return { msg : "invalid"} }
+    
+    return slugParent["nu"]
 }
 
 // Checks the response to see if there are results; If not, re attempt API call with alt title

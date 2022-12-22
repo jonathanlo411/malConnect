@@ -19,6 +19,9 @@ function buildHTML(source, data, targetTitle) {
         } else if (source === "Manganelo"){
             const url = scrapeManganelo(data)
             htmlButton = createButton('Manganelo', url)
+        } else if (source === "NovelUpdates") {
+            const url = `https://www.novelupdates.com/series/${data}/`
+            htmlButton = createButton('NovelUpdates', url)
         } else if (source === "GoGoAnime") {
             const url = scrapeGoGoAnime(data)
             htmlButton = createButton('GoGoAnime', url)
@@ -75,6 +78,23 @@ function createButton(context, url) {
                 <span class="block-pop">No Data on Manganelo</span>
             </button>
         </a>`.trim();
+    } else if (context === 'NovelUpdates') {
+        const nuLogo = chrome.runtime.getURL('assets/site-logos/novelupdates-logo.png')
+        html = (!dataError) ? `
+        <a href="${url}" target="_blank" rel="noopener noreferrer" class="inj-a-tag">
+            <button class="inj-btn-tag nu unblocked">
+                <p class="bt-text">Read on</p>
+                <img src="${nuLogo}" id="nu-logo" />
+            </button>
+        </a>`.trim() : `
+        <a class="inj-a-tag">
+            <button class="inj-btn-tag nu blocked">
+                <p class="bt-text">Read on</p>
+                <img src="${nuLogo}" id="nu-logo" />
+                <span class="block-pop">No Data on NovelUpdates</span>
+            </button>
+        </a>`.trim();
+
     } else if (context === "GoGoAnime") {
         const ggALogo = chrome.runtime.getURL('assets/site-logos/gogoanime-logo.png')
         html = (!dataError) ? `
