@@ -167,6 +167,15 @@
     transform: translate(65%, -10px);
 }
 
+.nu {
+    background-color: #2D3F51;
+    color: white;
+}
+#nu-logo {
+    height: 35px;
+    margin-left: 25px;
+}
+
 .gogo {
     background-color: var(--gogo-background);
     color: #fff;
