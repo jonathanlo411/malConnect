@@ -1,6 +1,6 @@
 
 # malConnect
-![](https://img.shields.io/badge/version-2.1-blue)![](https://img.shields.io/badge/license-MIT-green)
+![](https://img.shields.io/badge/version-2.2-blue)![](https://img.shields.io/badge/license-MIT-green)
 
 ## Overview
 malConnect is a chrome extension that provides direct links to watch/read the material on 3rd party sites directly from the MyAnimeList entry page. The extension will query various sites to return links to the source. Since a request is made each time a user views the MyAnimeList entry page, links are always up to date.
