@@ -157,7 +157,6 @@ function scrapeGoGoAnime(stringHTML) {
             break
         }
     }
-    console.log(animeLink)
     return `https://gogoanime.tel/${animeLink.replace("https://myanimelist.net/", "")}`
 }
 
