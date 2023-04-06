@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "malConnect",
     "description": "MAL Linking Tool",
-    "version": "2.1",
+    "version": "2.2",
     "icons": {
         "16": "assets/meta/logo16.png",
         "32": "assets/meta/logo32.png",
