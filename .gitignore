@@ -4,3 +4,6 @@ notes.txt
 
 # Package related
 package/*
+
+# Key and Secrets
+config.json

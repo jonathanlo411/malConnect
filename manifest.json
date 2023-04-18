@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "malConnect",
     "description": "MAL Linking Tool",
-    "version": "1.0",
+    "version": "2.2",
     "icons": {
         "16": "assets/meta/logo16.png",
         "32": "assets/meta/logo32.png",
@@ -15,7 +15,9 @@
         "https://api.mangadex.org/*",
         "https://myanimelist.net/anime/*",
         "https://myanimelist.net/manga/*",
-        "https://ww3.gogoanime2.org/search/*"
+        "https://gogoanime.llc/*",
+        "https://m.manganelo.com/search/story/*",
+        "https://api.myanimelist.net/v2/forum/topic/*"
     ],
     "content_scripts": [
         {
@@ -34,9 +36,9 @@
         {
             "resources": [
                 "scripts/content-scripts/loader.js",
-                "scripts/modules/fetch.js",
-                "scripts/modules/build.js",
-                "scripts/modules/fuse6.6.2.js",
+                "scripts/modules/*",
+                "assets/site-logos/*",
+                "config.json",
                 "https://fonts.googleapis.com/css?family=Poppins:400&subset=latin,latin-ext"
             ],
             "matches": [ "<all_urls>" ]
