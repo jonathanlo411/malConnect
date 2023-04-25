@@ -38,7 +38,7 @@ function buildHTML(source, data, targetTitle) {
     if (malWatchButton) { malWatchButton.remove() };
 }
 
-function createButton(context, url) {
+function createButton(context, url, darkmode=false) {
     const dataError = url === "";
     var template = document.createElement('template');
     var button;

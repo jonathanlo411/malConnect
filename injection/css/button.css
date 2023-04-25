@@ -23,6 +23,8 @@
     --gogo-background: #1E352F;
     --gogo-background-darken: #335145;
     --gogo-highlight: #00a651;
+
+    --gogo-light-background: #6f9b8a;
     
     /* YouTube */
     --yt-background: #282828;
@@ -210,3 +212,9 @@
     color: white;
     text-align: center;
 }
+
+/* Dark Mode */
+.dm-mdex { border: 1px solid white !important; }
+.dm-mglo { border: 1px solid white !important; }
+.dm-yt { border: 1px solid white !important; }
+.dm-gogo { background-color: var(--gogo-light-background); }
