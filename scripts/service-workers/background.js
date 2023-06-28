@@ -6,9 +6,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     const type = request.requestType;
     const headers = (Object.hasOwn(request, "headers")) ? request.headers : null
 
-    console.log(request)
-    console.log(Object.hasOwn(request, "headers"))
-
     // Send request and forward to content script
     fetchData(url, type, headers)
         .then((apiCallResponse) => { sendResponse(apiCallResponse) })

@@ -23,6 +23,10 @@
     --gogo-background: #1E352F;
     --gogo-background-darken: #335145;
     --gogo-highlight: #00a651;
+
+    /* 9anime */
+    --na-background: #5a2e98;
+    --na-background-lighten: #6735ae;
     
     /* YouTube */
     --yt-background: #282828;
@@ -186,6 +190,19 @@
 #gga-logo {
     height: 30px;
     margin-left: 17px;
+}
+
+.na {
+    background-color: var(--na-background);
+    color: white;
+}
+.na:hover {
+    background-color: var(--na-background-lighten);
+}
+#na-logo {
+    height: 25px;
+    margin-top: 3px;
+    margin-left: 10px;
 }
 
 .yt {

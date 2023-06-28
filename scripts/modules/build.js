@@ -9,7 +9,7 @@ function buildHTML(source, data, targetTitle) {
     var htmlButton;
     
     // Check if d*ata is available
-    if (!data || (data.msg && data.msg === 'invalid')) { 
+    if ((!data && source != "9anime") || (data && data.msg && data.msg === 'invalid')) { 
         htmlButton = createButton(source, "")
     } else {
         // Selectively build buttons
@@ -28,6 +28,9 @@ function buildHTML(source, data, targetTitle) {
         } else if (source === "YouTube") {
             const url = parseMALForumJSON(data)
             htmlButton = createButton("YouTube", url)
+        } else if (source === "9anime") {
+            const url = `https://9anime.pl/filter?keyword=${targetTitle.replaceAll(' ', '+')}`
+            htmlButton = createButton("9anime", url)
         } else {
             htmlButton = createButton(null, null)
         }
@@ -94,7 +97,22 @@ function createButton(context, url) {
                 <span class="block-pop">No Data on NovelUpdates</span>
             </button>
         </a>`.trim();
-
+    } else if (context === '9anime') {
+            const nineAnimeLogo = chrome.runtime.getURL('assets/site-logos/9anime-logo.png')
+            html = (!dataError) ? `
+            <a href="${url}" target="_blank" rel="noopener noreferrer" class="inj-a-tag">
+                <button class="inj-btn-tag na unblocked">
+                    <p class="bt-text">Watch on</p>
+                    <img src="${nineAnimeLogo}" id="na-logo" />
+                </button>
+            </a>`.trim() : `
+            <a class="inj-a-tag">
+                <button class="inj-btn-tag na blocked">
+                    <p class="bt-text">Watch on</p>
+                    <img src="${nineAnimeLogo}" id="na-logo" />
+                    <span class="block-pop">No Data on 9anime</span>
+                </button>
+            </a>`.trim();
     } else if (context === "GoGoAnime") {
         const ggALogo = chrome.runtime.getURL('assets/site-logos/gogoanime-logo.png')
         html = (!dataError) ? `

@@ -57,5 +57,6 @@ if (!NYA) {
         targetTitle = document.getElementsByClassName('h1_bold_none')[0].textContent;
         fetchGoGoAnime(targetTitle)
             .then((res) => buildHTML("GoGoAnime", res, targetTitle));
+        buildHTML("9anime", null, targetTitle)
     }
 }
