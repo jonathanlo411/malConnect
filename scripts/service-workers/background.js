@@ -1,5 +1,5 @@
 
-// Background service wroker to bypass CORS
+// Background service wroker to make requests
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     // Obtain request information
     const url = request.url;
