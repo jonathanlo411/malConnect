@@ -29,7 +29,7 @@ function buildHTML(source, data, targetTitle) {
             const url = parseMALForumJSON(data)
             htmlButton = createButton("YouTube", url)
         } else if (source === "9anime") {
-            const url = `https://9anime.pl/filter?keyword=${targetTitle.replaceAll(' ', '+')}`
+            const url = `https://aniwave.to//filter?keyword=${targetTitle.replaceAll(' ', '+')}`
             htmlButton = createButton("9anime", url)
         } else {
             htmlButton = createButton(null, null)
