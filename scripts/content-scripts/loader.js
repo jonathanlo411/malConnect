@@ -22,6 +22,7 @@ for (var infoTag of document.getElementsByClassName('spaceit_pad')) {
     countMax -= 1;
 }
 const baseSourceType = document.getElementsByClassName("type")[0];
+const darkModeOn = document.getElementById('');
 sourceType = (baseSourceType.firstChild.hasChildNodes()) ? baseSourceType.children[0].textContent : baseSourceType.textContent;
 
 
@@ -32,15 +33,15 @@ if (!NYA) {
         targetTitle = document.getElementsByClassName('h1-title')[0].childNodes[0].childNodes[0].data;
         fetchMangaDex(targetTitle)
             .then((res) => checkResponse("MangaDex", res, backupTitleJP))
-            .then((res) => buildHTML("MangaDex", res, targetTitle));
+            .then((res) => buildHTML("MangaDex", res, targetTitle, darkModeOn));
         fetchManganelo(targetTitle)
             .then((res) => checkResponse("Manganelo", res, backupTitleEN))
-            .then((res) => buildHTML("Manganelo", res, targetTitle));
+            .then((res) => buildHTML("Manganelo", res, targetTitle, darkModeOn));
     } else if (novel.includes(sourceType)) {
         // Novel sites: NovelUpdates
         targetTitle =  document.getElementsByClassName('h1-title')[0].childNodes[0].childNodes[0].data;
         fetchNovelUpdates(targetTitle)
-            .then((res) => buildHTML("NovelUpdates", res, targetTitle));
+            .then((res) => buildHTML("NovelUpdates", res, targetTitle, darkModeOn));
     } else if (music.includes(sourceType)) {
         // Youtube Music Videos for Anime
         const forumTopics = document.getElementById('forumTopics')
@@ -51,11 +52,11 @@ if (!NYA) {
             }
         }
         fetchYoutubeMV(forumID)
-            .then((res) => buildHTML("YouTube", res, targetTitle));
+            .then((res) => buildHTML("YouTube", res, targetTitle, darkModeOn));
     } else {
         // Anime/Movie sites: GoGoAnime
         targetTitle = document.getElementsByClassName('h1_bold_none')[0].textContent;
         fetchGoGoAnime(targetTitle)
-            .then((res) => buildHTML("GoGoAnime", res, targetTitle));
+            .then((res) => buildHTML("GoGoAnime", res, targetTitle, darkModeOn));
     }
 }

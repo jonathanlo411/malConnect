@@ -1,6 +1,6 @@
 import Fuse from './fuse6.6.2.js'
 
-function buildHTML(source, data, targetTitle) {
+function buildHTML(source, data, targetTitle, darkmode) {
 
     // Obtain targets
     const domTarget = document.getElementsByClassName('leftside')[0];
