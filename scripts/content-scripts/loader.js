@@ -55,8 +55,9 @@ if (!NYA) {
     } else {
         // Anime/Movie sites: GoGoAnime
         targetTitle = document.getElementsByClassName('h1_bold_none')[0].textContent;
-        fetchGoGoAnime(targetTitle)
-            .then((res) => buildHTML("GoGoAnime", res, targetTitle));
+        // fetchGoGoAnime(targetTitle)
+        //     .then((res) => buildHTML("GoGoAnime", res, targetTitle));
+        buildHTML("GoGoAnime", null, targetTitle)
         buildHTML("9anime", null, targetTitle)
     }
 }

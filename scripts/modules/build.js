@@ -9,7 +9,7 @@ function buildHTML(source, data, targetTitle) {
     var htmlButton;
     
     // Check if d*ata is available
-    if ((!data && source != "9anime") || (data && data.msg && data.msg === 'invalid')) { 
+    if ((!data && source != "9anime" && source != "GoGoAnime") || (data && data.msg && data.msg === 'invalid')) { 
         htmlButton = createButton(source, "")
     } else {
         // Selectively build buttons
@@ -23,7 +23,9 @@ function buildHTML(source, data, targetTitle) {
             const url = `https://www.novelupdates.com/series/${data}/`
             htmlButton = createButton('NovelUpdates', url)
         } else if (source === "GoGoAnime") {
-            const url = scrapeGoGoAnime(data)
+            // const url = scrapeGoGoAnime(data)
+            const url = `https://gogoanimehd.io/search.html?keyword=${targetTitle.replaceAll(' ', '+')}`
+            console.log(url)
             htmlButton = createButton('GoGoAnime', url)
         } else if (source === "YouTube") {
             const url = parseMALForumJSON(data)
