@@ -1,5 +1,6 @@
 import {
     fetchAnix,
+    fetchAniwave,
     fetchGoGoAnime,
     fetchYoutubeMV,
     fetchMangaDex,
@@ -66,9 +67,11 @@ if (!NYA) {
         fetchAnix(targetTitle)
             .then((res) => checkResponse("Anix", res, backupTitleJP))
             .then((res) => buildHTML("Anix", res, targetTitle))
+        fetchAniwave(targetTitle)
+            .then((res) => checkResponse("Aniwave", res, backupTitleJP))
+            .then((res) => buildHTML("Aniwave", res, targetTitle))
         // fetchGoGoAnime(targetTitle)
         //     .then((res) => buildHTML("GoGoAnime", res, targetTitle));
         buildHTML("GoGoAnime", null, targetTitle)
-        buildHTML("9anime", null, targetTitle)
     }
 }

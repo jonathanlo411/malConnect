@@ -28,6 +28,19 @@ function fetchAnix(targetTitle) {
     );
 }
 
+function fetchAniwave(targetTitle) {
+    const query = targetTitle.replaceAll(' ', '+')
+    const urlAniwave = `https://aniwave.to/filter?keyword=${query}`
+
+    // Send message to background runtime to fetch Anix
+    return chrome.runtime.sendMessage(
+        {
+            requestType: "html",
+            url: urlAniwave
+        }
+    );
+}
+
 // Music
 
 async function fetchYoutubeMV(forumID) {
@@ -125,11 +138,24 @@ async function checkResponse(sourceType, res, backupTitle) {
             var backupRes = await fetchGoGoAnime(backupTitle)
             return checkResponse("Anix", backupRes, "Final");
         } else { return res };
+    } else if (sourceType === "Aniwave") {
+        // Load Aniwave DOM
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(res, 'text/html');
+
+        // Checking issues
+        if (doc.getElementsByClassName('d-title').length === 0) {
+            // If second attempt, return unavailable button
+            if (backupTitle === "Final") { return { msg : "invalid" } }
+            var backupRes = await fetchAniwave(backupTitle)
+            return checkResponse("Aniwave", backupRes, "Final");
+        } else { return res };
     }
 }
 
 export {
     fetchAnix,
+    fetchAniwave,
     fetchGoGoAnime,
     fetchYoutubeMV,
     fetchMangaDex,
