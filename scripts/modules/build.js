@@ -9,7 +9,7 @@ function buildHTML(source, data, targetTitle) {
     var htmlButton;
     
     // Check if data is available
-    if ((!data && source != "9anime" && source != "GoGoAnime") || (data && data.msg && data.msg === 'invalid')) { 
+    if ((!data && source != "GoGoAnime") || (data && data.msg && data.msg === 'invalid')) { 
         htmlButton = createButton(source, "")
     } else {
         // Selectively build buttons
@@ -32,9 +32,10 @@ function buildHTML(source, data, targetTitle) {
         } else if (source === "YouTube") {
             const url = parseMALForumJSON(data)
             htmlButton = createButton("YouTube", url)
-        } else if (source === "9anime") {
-            const url = `https://aniwave.to//filter?keyword=${targetTitle.replaceAll(' ', '+')}`
-            htmlButton = createButton("9anime", url)
+        } else if (source === "Aniwave") {
+            console.log("here")
+            const url = scrapeAniwave(data)
+            htmlButton = createButton("Aniwave", url)
         } else {
             htmlButton = createButton(null, null)
         }
@@ -101,7 +102,7 @@ function createButton(context, url) {
                 <span class="block-pop">No Data on NovelUpdates</span>
             </button>
         </a>`.trim();
-    } else if (context === '9anime') {
+    } else if (context === 'Aniwave') {
             const nineAnimeLogo = chrome.runtime.getURL('assets/site-logos/9anime-logo.png')
             html = (!dataError) ? `
             <a href="${url}" target="_blank" rel="noopener noreferrer" class="inj-a-tag">
@@ -149,7 +150,6 @@ function createButton(context, url) {
                 <span class="block-pop">No Data on YouTube</span>
             </button>
         </a>`.trim();
-
     } else if (context === "YouTube") {
         const ytLogo = chrome.runtime.getURL('assets/site-logos/youtube-logo.svg')
         html = (!dataError) ? `
@@ -182,7 +182,7 @@ function createButton(context, url) {
 }
 
 function scrapeAnix(stringHTML) {
-    // Load GoGoAnime DOM
+    // Load Anix DOM
     var parser = new DOMParser();
     var doc = parser.parseFromString(stringHTML, 'text/html');
 
@@ -190,6 +190,21 @@ function scrapeAnix(stringHTML) {
     const animeList = doc.getElementsByClassName('ani-name');
     if (animeList.length !== 0) {
         return animeList[0].children[0].href
+    } else {
+        console.log("An unexpected error has occured.")
+        return undefined
+    }
+}
+
+function scrapeAniwave(stringHTML) {
+    // Load Aniwave DOM
+    var parser = new DOMParser();
+    var doc = parser.parseFromString(stringHTML, 'text/html');
+
+    // Parse Aniwave DOM
+    const animeList = doc.getElementsByClassName('d-title');
+    if (animeList.length !== 0) {
+        return animeList[0].href
     } else {
         console.log("An unexpected error has occured.")
         return undefined
