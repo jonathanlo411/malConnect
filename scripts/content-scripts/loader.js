@@ -1,4 +1,12 @@
-import { fetchGoGoAnime, fetchYoutubeMV, fetchMangaDex, fetchManganelo, fetchNovelUpdates, checkResponse } from "../modules/fetch.js";
+import {
+    fetchAnix,
+    fetchGoGoAnime,
+    fetchYoutubeMV,
+    fetchMangaDex,
+    fetchManganelo,
+    fetchNovelUpdates,
+    checkResponse
+} from "../modules/fetch.js";
 import buildHTML from "../modules/build.js"
 
 // Definitions
@@ -55,6 +63,9 @@ if (!NYA) {
     } else {
         // Anime/Movie sites: GoGoAnime
         targetTitle = document.getElementsByClassName('h1_bold_none')[0].textContent;
+        fetchAnix(targetTitle)
+            .then((res) => checkResponse("Anix", res, backupTitleJP))
+            .then((res) => buildHTML("Anix", res, targetTitle))
         // fetchGoGoAnime(targetTitle)
         //     .then((res) => buildHTML("GoGoAnime", res, targetTitle));
         buildHTML("GoGoAnime", null, targetTitle)

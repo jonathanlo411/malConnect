@@ -8,7 +8,7 @@ function buildHTML(source, data, targetTitle) {
     let malWatchButton = document.getElementById('broadcast-block')
     var htmlButton;
     
-    // Check if d*ata is available
+    // Check if data is available
     if ((!data && source != "9anime" && source != "GoGoAnime") || (data && data.msg && data.msg === 'invalid')) { 
         htmlButton = createButton(source, "")
     } else {
@@ -22,10 +22,12 @@ function buildHTML(source, data, targetTitle) {
         } else if (source === "NovelUpdates") {
             const url = `https://www.novelupdates.com/series/${data}/`
             htmlButton = createButton('NovelUpdates', url)
+        } else if (source === "Anix") {
+            const url = scrapeAnix(data)
+            htmlButton = createButton('Anix', url)
         } else if (source === "GoGoAnime") {
             // const url = scrapeGoGoAnime(data)
             const url = `https://gogoanimehd.io/search.html?keyword=${targetTitle.replaceAll(' ', '+')}`
-            console.log(url)
             htmlButton = createButton('GoGoAnime', url)
         } else if (source === "YouTube") {
             const url = parseMALForumJSON(data)
@@ -131,6 +133,23 @@ function createButton(context, url) {
                 <span class="block-pop">No Data on GoGoAnime</span>
             </button>
         </a>`.trim();
+    } else if (context === "Anix") {
+        const anixLogo = chrome.runtime.getURL('assets/site-logos/anix-logo.png')
+        html = (!dataError) ? `
+        <a href="${url}" target="_blank" rel="noopener noreferrer" class="inj-a-tag">
+            <button class="inj-btn-tag anix unblocked">
+                <p class="bt-text">Watch on</p>
+                <img src="${anixLogo}" id="anix-logo"/>
+            </button>
+        </a>`.trim() : `
+        <a class="inj-a-tag">
+            <button class="inj-btn-tag anix blocked">
+                <p class="bt-text">Watch on</p>
+                <img src="${anixLogo}" id="anix-logo"/>
+                <span class="block-pop">No Data on YouTube</span>
+            </button>
+        </a>`.trim();
+
     } else if (context === "YouTube") {
         const ytLogo = chrome.runtime.getURL('assets/site-logos/youtube-logo.svg')
         html = (!dataError) ? `
@@ -160,6 +179,21 @@ function createButton(context, url) {
     template.innerHTML = html;
     button = template.content.firstChild;
     return button;
+}
+
+function scrapeAnix(stringHTML) {
+    // Load GoGoAnime DOM
+    var parser = new DOMParser();
+    var doc = parser.parseFromString(stringHTML, 'text/html');
+
+    // Parse Anix DOM
+    const animeList = doc.getElementsByClassName('ani-name');
+    if (animeList.length !== 0) {
+        return animeList[0].children[0].href
+    } else {
+        console.log("An unexpected error has occured.")
+        return undefined
+    }
 }
 
 function scrapeGoGoAnime(stringHTML) {
