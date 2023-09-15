@@ -9,7 +9,7 @@ function buildHTML(source, data, targetTitle) {
     var htmlButton;
     
     // Check if data is available
-    if ((!data && source != "GoGoAnime") || (data && data.msg && data.msg === 'invalid')) { 
+    if ((!data) || (data && data.msg && data.msg === 'invalid')) { 
         htmlButton = createButton(source, "")
     } else {
         // Selectively build buttons
@@ -26,14 +26,12 @@ function buildHTML(source, data, targetTitle) {
             const url = scrapeAnix(data)
             htmlButton = createButton('Anix', url)
         } else if (source === "GoGoAnime") {
-            // const url = scrapeGoGoAnime(data)
-            const url = `https://gogoanimehd.io/search.html?keyword=${targetTitle.replaceAll(' ', '+')}`
+            const url = scrapeGoGoAnime(data)
             htmlButton = createButton('GoGoAnime', url)
         } else if (source === "YouTube") {
             const url = parseMALForumJSON(data)
             htmlButton = createButton("YouTube", url)
         } else if (source === "Aniwave") {
-            console.log("here")
             const url = scrapeAniwave(data)
             htmlButton = createButton("Aniwave", url)
         } else {
@@ -220,13 +218,13 @@ function scrapeGoGoAnime(stringHTML) {
     const animeList = doc.getElementsByClassName('name')
     var animeLink;
     for (var i = 0; i < animeList.length; i ++) {
-        var anime = animeList[i];
+        let anime = animeList[i];
         if (!(anime.innerText.includes("Dub") || anime.innerText.includes("dub"))) {
             animeLink = anime.children[0].href;
             break
         }
     }
-    return `https://gogoanime.tel/${animeLink.replace("https://myanimelist.net/", "")}`
+    return `https://gogoanimehd.io/${animeLink.replace("https://myanimelist.net/", "")}`
 }
 
 function scrapeManganelo(stringHTML) {

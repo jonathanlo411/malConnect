@@ -70,8 +70,8 @@ if (!NYA) {
         fetchAniwave(targetTitle)
             .then((res) => checkResponse("Aniwave", res, backupTitleJP))
             .then((res) => buildHTML("Aniwave", res, targetTitle))
-        // fetchGoGoAnime(targetTitle)
-        //     .then((res) => buildHTML("GoGoAnime", res, targetTitle));
-        buildHTML("GoGoAnime", null, targetTitle)
+        fetchGoGoAnime(targetTitle)
+            .then((res) => checkResponse("GoGoAnime", res, backupTitleJP))
+            .then((res) => buildHTML("GoGoAnime", res, targetTitle));
     }
 }
