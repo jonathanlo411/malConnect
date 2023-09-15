@@ -3,8 +3,8 @@
 // --- Anine ---
 
 function fetchGoGoAnime(targetTitle) {
-    const query = targetTitle.replaceAll(' ', '+')
-    const urlGoGoAnime = `https://gogoanimehd.to/search.html?keyword=${query}`
+    const query = targetTitle.replaceAll(' ', '%20')
+    const urlGoGoAnime = `https://gogoanimehd.io/search.html?keyword=${query}`
 
     // Send message to background runtime to fetch GoGoAnime
     return chrome.runtime.sendMessage(
@@ -149,6 +149,18 @@ async function checkResponse(sourceType, res, backupTitle) {
             if (backupTitle === "Final") { return { msg : "invalid" } }
             var backupRes = await fetchAniwave(backupTitle)
             return checkResponse("Aniwave", backupRes, "Final");
+        } else { return res };
+    } else if (sourceType === "GoGoAnime") {
+        // Load Aniwave DOM
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(res, 'text/html');
+
+        // Checking issues
+        if (doc.getElementsByClassName('name').length === 0) {
+            // If second attempt, return unavailable button
+            if (backupTitle === "Final") { return { msg : "invalid" } }
+            var backupRes = await fetchGoGoAnime(backupTitle)
+            return checkResponse("GoGoAnime", backupRes, "Final");
         } else { return res };
     }
 }

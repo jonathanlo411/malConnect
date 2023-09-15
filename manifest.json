@@ -15,11 +15,11 @@
         "https://api.mangadex.org/*",
         "https://myanimelist.net/anime/*",
         "https://myanimelist.net/manga/*",
-        "https://gogoanime.llc/*",
         "https://m.manganelo.com/search/story/*",
         "https://api.myanimelist.net/v2/forum/topic/*",
         "https://anix.to/filter",
-        "https://aniwave.to/filter"
+        "https://aniwave.to/filter",
+        "https://gogoanimehd.io/*"
     ],
     "content_scripts": [
         {
