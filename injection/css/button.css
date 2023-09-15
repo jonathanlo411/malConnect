@@ -27,6 +27,10 @@
     /* 9anime */
     --na-background: #5a2e98;
     --na-background-lighten: #6735ae;
+
+    /* Anix */
+    --anix-background: #006ABD;
+    --anix-background-lighten: #1b82d1;
     
     /* YouTube */
     --yt-background: #282828;
@@ -202,6 +206,19 @@
 #na-logo {
     height: 25px;
     margin-top: 3px;
+    margin-left: 10px;
+}
+
+.anix {
+    background-color: var(--anix-background);
+    color: white;
+}
+.anix:hover {
+    background-color: var(--anix-background-lighten);
+}
+#anix-logo {
+    height: 22px;
+    margin-top: 5px;
     margin-left: 10px;
 }
 

@@ -15,6 +15,19 @@ function fetchGoGoAnime(targetTitle) {
     );
 }
 
+function fetchAnix(targetTitle) {
+    const query = targetTitle.replaceAll(' ', '%20')
+    const urlAnix = `https://anix.to/filter?keyword=${query}`
+
+    // Send message to background runtime to fetch Anix
+    return chrome.runtime.sendMessage(
+        {
+            requestType: "html",
+            url: urlAnix
+        }
+    );
+}
+
 // Music
 
 async function fetchYoutubeMV(forumID) {
@@ -100,7 +113,27 @@ async function checkResponse(sourceType, res, backupTitle) {
             var backupRes = await fetchManganelo(backupTitle)
             return checkResponse("Manganelo", backupRes, "Final");
         } else { return res };
+    } else if (sourceType === "Anix") {
+        // Load Anix DOM
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(res, 'text/html');
+
+        // Checking issues
+        if (doc.getElementsByClassName('piece').length === 0) {
+            // If second attempt, return unavailable button
+            if (backupTitle === "Final") { return { msg : "invalid" } }
+            var backupRes = await fetchGoGoAnime(backupTitle)
+            return checkResponse("Anix", backupRes, "Final");
+        } else { return res };
     }
 }
 
-export { fetchGoGoAnime, fetchYoutubeMV, fetchMangaDex, fetchManganelo, fetchNovelUpdates, checkResponse }
+export {
+    fetchAnix,
+    fetchGoGoAnime,
+    fetchYoutubeMV,
+    fetchMangaDex,
+    fetchManganelo,
+    fetchNovelUpdates,
+    checkResponse
+}
