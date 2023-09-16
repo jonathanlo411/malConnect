@@ -19,17 +19,20 @@ const SOURCE_ASSETS = {
     Anix: {
         imgSrc: chrome.runtime.getURL('assets/site-logos/anix-logo.png'),
         cssCode: 'anix',
-        parser: parseAnix
+        parser: parseAnix,
+        episodeConvert: (url, epCount) => `${url}/ep-${epCount + 1}`
     },
     Aniwave: {
         imgSrc: chrome.runtime.getURL('assets/site-logos/9anime-logo.png'),
         cssCode: 'na',
-        parser: parseAniwave
+        parser: parseAniwave,
+        episodeConvert: (url, epCount) => `${url}/ep-${epCount + 1}`
     },
     GoGoAnime: {
         imgSrc: chrome.runtime.getURL('assets/site-logos/gogoanime-logo.png'),
         cssCode: 'gogo',
-        parser: parseGoGoAnime
+        parser: parseGoGoAnime,
+        episodeConvert: (url, epCount) => `${url.replace('category/', '')}-episode-${epCount + 1}`
     },
     YouTube: {
         imgSrc: chrome.runtime.getURL('assets/site-logos/youtube-logo.svg'),
@@ -38,7 +41,7 @@ const SOURCE_ASSETS = {
     }
 }
 
-function buildHTML(sourceTarget, data, targetTitle) {
+function buildHTML(sourceTarget, data, targetTitle, episodeNumber) {
 
     // Obtain targets
     const domTarget = document.getElementsByClassName('leftside')[0];
@@ -48,10 +51,10 @@ function buildHTML(sourceTarget, data, targetTitle) {
     
     // Build buttons
     if ((!data) || (data && data.msg && data.msg === 'invalid')) { 
-        htmlButton = createButton(sourceTarget, "")
+        htmlButton = createButton(sourceTarget, "", null)
     } else {
         const url = SOURCE_ASSETS[sourceTarget].parser(data)
-        htmlButton = createButton(sourceTarget, url)
+        htmlButton = createButton(sourceTarget, url, episodeNumber)
     }
 
     // Insertion
@@ -59,12 +62,13 @@ function buildHTML(sourceTarget, data, targetTitle) {
     if (malWatchButton) { malWatchButton.remove() };
 }
 
-function createButton(sourceTarget, url) {
-    const dataError = url === "";
+function createButton(sourceTarget, url, episodeNumber) {
     const template = document.createElement('template');
+    const source = SOURCE_ASSETS[sourceTarget]
+    const dataError = url === "";
+    url = (episodeNumber) ? source.episodeConvert(url, episodeNumber) : url
     let html;
 
-    const source = SOURCE_ASSETS[sourceTarget]
     if (!source) {  // General error 
         html = `
         <a class="inj-a-tag">

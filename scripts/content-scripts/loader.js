@@ -13,6 +13,7 @@ let sourceType;
 let backupTitleJP;
 let backupTitleEN;
 let targetTitle;
+let USER_EPISODE_COUNT;
 
 // Grab backupTitle and airing status
 let countMax = 10
@@ -32,11 +33,20 @@ if (baseSourceType.firstChild.hasChildNodes()) {
     sourceType = baseSourceType.textContent
 }
 
+// Proccess user's episode count for redirection
+function collectUserEpisode() {
+    USER_EPISODE_COUNT = document.getElementById('myinfo_watchedeps').value
+    const totalEpisodes = document.getElementById('curEps').innerHTML
+    if (USER_EPISODE_COUNT === totalEpisodes) {
+        USER_EPISODE_COUNT = 0
+    }
+}
+
 // Handle all button generations
 async function handleButtonGeneration(targetTile, backupTitle, sourceTarget) {
     let initialData = await fetchSource(targetTile, sourceTarget)
     let rawData = await checkResponse(sourceTarget, initialData, backupTitle)
-    buildHTML(sourceTarget, rawData, targetTile)
+    buildHTML(sourceTarget, rawData, targetTile, parseInt(USER_EPISODE_COUNT))
 }
 
 // Top Level call
@@ -63,6 +73,7 @@ if (!notYetAired) {
     } else {
         // Anime/Movie sites: GoGoAnime, Anix, Aniwave
         targetTitle = document.getElementsByClassName('h1_bold_none')[0].textContent;
+        collectUserEpisode()
         handleButtonGeneration(targetTitle, backupTitleJP, "Aniwave")
         handleButtonGeneration(targetTitle, backupTitleJP, "Anix")
         handleButtonGeneration(targetTitle, backupTitleJP, "GoGoAnime")
