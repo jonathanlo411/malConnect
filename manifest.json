@@ -10,6 +10,7 @@
         "128": "assets/meta/logo128.png"
     },
     "permissions": [
+        "storage"
     ],
     "host_permissions": [
         "https://api.mangadex.org/*",
@@ -21,6 +22,9 @@
         "https://aniwave.to/filter",
         "https://gogoanimehd.io/*"
     ],
+    "action": {
+        "default_popup": "popup/popup.html"
+    },
     "content_scripts": [
         {
             "matches": [
