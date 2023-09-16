@@ -14,6 +14,7 @@ let backupTitleJP;
 let backupTitleEN;
 let targetTitle;
 let USER_EPISODE_COUNT;
+let DISPLAY_LINK_SETTINGS;
 
 // Grab backupTitle and airing status
 let countMax = 10
@@ -42,15 +43,24 @@ function collectUserEpisode() {
     }
 }
 
+// Load button settings
+async function loadSettings() {
+    DISPLAY_LINK_SETTINGS = (await chrome.storage.sync.get(["settingDL"])).settingDL
+    if (!DISPLAY_LINK_SETTINGS) DISPLAY_LINK_SETTINGS = false
+}
+
 // Handle all button generations
 async function handleButtonGeneration(targetTile, backupTitle, sourceTarget) {
+    if (DISPLAY_LINK_SETTINGS && (!DISPLAY_LINK_SETTINGS[sourceTarget])) return
     let initialData = await fetchSource(targetTile, sourceTarget)
     let rawData = await checkResponse(sourceTarget, initialData, backupTitle)
     buildHTML(sourceTarget, rawData, targetTile, parseInt(USER_EPISODE_COUNT))
 }
 
 // Top Level call
+( async () => {
 if (!notYetAired) {
+    await loadSettings()
     if (manga.includes(sourceType)) {
         // Manga sites: MangaDex, Manganelo
         targetTitle = document.getElementsByClassName('h1-title')[0].childNodes[0].childNodes[0].data;
@@ -79,3 +89,4 @@ if (!notYetAired) {
         handleButtonGeneration(targetTitle, backupTitleJP, "GoGoAnime")
     }
 }
+})()
