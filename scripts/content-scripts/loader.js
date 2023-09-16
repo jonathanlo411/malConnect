@@ -1,11 +1,5 @@
 import {
-    fetchAnix,
-    fetchAniwave,
-    fetchGoGoAnime,
-    fetchYoutubeMV,
-    fetchMangaDex,
-    fetchManganelo,
-    fetchNovelUpdates,
+    fetchSource,
     checkResponse
 } from "../modules/fetch.js";
 import buildHTML from "../modules/build.js"
@@ -14,64 +8,63 @@ import buildHTML from "../modules/build.js"
 const manga = ["Manga", "Manhwa", "Manhua"]
 const novel = ["Novel", "Light Novel"]
 const music = ["Music"]
-var NYA = false;
+let notYetAired = false;
 let sourceType;
 let backupTitleJP;
 let backupTitleEN;
 let targetTitle;
-let forumID;
 
-// Grab backupTitle and If not aired, do not fetch
-var countMax = 10
-for (var infoTag of document.getElementsByClassName('spaceit_pad')) {
+// Grab backupTitle and airing status
+let countMax = 10
+for (let infoTag of document.getElementsByClassName('spaceit_pad')) {
     if (countMax === 0) { break };
-    if (infoTag.innerHTML.includes('Not yet aired')) { NYA = true; }
+    if (infoTag.innerHTML.includes('Not yet aired')) { notYetAired = true; }
     if (infoTag.innerHTML.includes('Japanese:')) { backupTitleJP = infoTag.innerText.replace('Japanese: ', ''); }
     if (infoTag.innerHTML.includes('English:')) { backupTitleEN = infoTag.innerText.replace('English: ', ''); }
     countMax -= 1;
 }
-const baseSourceType = document.getElementsByClassName("type")[0];
-sourceType = (baseSourceType.firstChild.hasChildNodes()) ? baseSourceType.children[0].textContent : baseSourceType.textContent;
 
+// Fetch Source type
+const baseSourceType = document.getElementsByClassName("type")[0];
+if (baseSourceType.firstChild.hasChildNodes()) {
+    sourceType = baseSourceType.children[0].textContent 
+} else {
+    sourceType = baseSourceType.textContent
+}
+
+// Handle all button generations
+async function handleButtonGeneration(targetTile, backupTitle, sourceTarget) {
+    let initialData = await fetchSource(targetTile, sourceTarget)
+    let rawData = await checkResponse(sourceTarget, initialData, backupTitle)
+    buildHTML(sourceTarget, rawData, targetTile)
+}
 
 // Top Level call
-if (!NYA) {
+if (!notYetAired) {
     if (manga.includes(sourceType)) {
-        // Manga sites: MangaDex
+        // Manga sites: MangaDex, Manganelo
         targetTitle = document.getElementsByClassName('h1-title')[0].childNodes[0].childNodes[0].data;
-        fetchMangaDex(targetTitle)
-            .then((res) => checkResponse("MangaDex", res, backupTitleJP))
-            .then((res) => buildHTML("MangaDex", res, targetTitle));
-        fetchManganelo(targetTitle)
-            .then((res) => checkResponse("Manganelo", res, backupTitleEN))
-            .then((res) => buildHTML("Manganelo", res, targetTitle));
+        handleButtonGeneration(targetTitle, backupTitleJP, "MangaDex")
+        handleButtonGeneration(targetTitle, backupTitleEN, "Manganelo")
     } else if (novel.includes(sourceType)) {
         // Novel sites: NovelUpdates
         targetTitle =  document.getElementsByClassName('h1-title')[0].childNodes[0].childNodes[0].data;
-        fetchNovelUpdates(targetTitle)
-            .then((res) => buildHTML("NovelUpdates", res, targetTitle));
+        handleButtonGeneration(targetTitle, backupTitleJP, "NovelUpdates")
     } else if (music.includes(sourceType)) {
-        // Youtube Music Videos for Anime
-        const forumTopics = document.getElementById('forumTopics')
-            .getElementsByClassName('ga-click');
-        for (var i = 0; i < forumTopics.length; i ++) {
-            if (forumTopics[i].textContent.includes("Episode 1")) {
-                forumID = forumTopics[i].href.replace("https://myanimelist.net/forum/?topicid=", "")
+        // Music Video sites: Youtube
+        let forumID;
+        const forumTopics = document.querySelectorAll("#forumTopics .ga-click")
+        for (let topic of forumTopics) { if (topic.innerHTML.includes("Episode 1")) {
+                forumID = topic.href.replace("https://myanimelist.net/forum/?topicid=", "")
+                break
             }
         }
-        fetchYoutubeMV(forumID)
-            .then((res) => buildHTML("YouTube", res, targetTitle));
+        handleButtonGeneration(forumID, null, "YouTube")
     } else {
-        // Anime/Movie sites: GoGoAnime
+        // Anime/Movie sites: GoGoAnime, Anix, Aniwave
         targetTitle = document.getElementsByClassName('h1_bold_none')[0].textContent;
-        fetchAnix(targetTitle)
-            .then((res) => checkResponse("Anix", res, backupTitleJP))
-            .then((res) => buildHTML("Anix", res, targetTitle))
-        fetchAniwave(targetTitle)
-            .then((res) => checkResponse("Aniwave", res, backupTitleJP))
-            .then((res) => buildHTML("Aniwave", res, targetTitle))
-        fetchGoGoAnime(targetTitle)
-            .then((res) => checkResponse("GoGoAnime", res, backupTitleJP))
-            .then((res) => buildHTML("GoGoAnime", res, targetTitle));
+        handleButtonGeneration(targetTitle, backupTitleJP, "Aniwave")
+        handleButtonGeneration(targetTitle, backupTitleJP, "Anix")
+        handleButtonGeneration(targetTitle, backupTitleJP, "GoGoAnime")
     }
 }
