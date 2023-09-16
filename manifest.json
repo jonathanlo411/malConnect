@@ -21,6 +21,9 @@
         "https://aniwave.to/filter",
         "https://gogoanimehd.io/*"
     ],
+    "action": {
+        "default_popup": "popup/popup.html"
+    },
     "content_scripts": [
         {
             "matches": [
