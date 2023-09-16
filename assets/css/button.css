@@ -1,9 +1,3 @@
-@font-face {
-    font-family: 'Poppins';
-    font-style: normal;
-    font-weight: 400;
-    src: url(https://fonts.googleapis.com/css?family=Poppins:400&subset=latin,latin-ext);
-}
 :root {
     /* MyAnimeList */
     --mal-primary: #2e51a2;
@@ -127,15 +121,10 @@
 .mdex.unblocked:hover {
     background-color: var(--md-background-lighten);
 }
-#md-cat {
-    height: 28px;
-    margin-left: 5px;
-}
-#md-logo {
-    display: inline;
-    height: 20px;
-    margin-top: 5px;
-    margin-left: 1px;
+#mdex-logo {
+    height: 23px;
+    margin-left: 4px;
+    margin-top: 4px;
 }
 
 .mglo {
@@ -191,7 +180,7 @@
 .gogo.unblocked:hover {
     background-color: var(--gogo-background-darken)
 }
-#gga-logo {
+#gogo-logo {
     height: 30px;
     margin-left: 17px;
 }
