@@ -31,7 +31,7 @@
                 "https://myanimelist.net/manga/*"
             ],
             "js": ["scripts/content-scripts/head.js"],
-            "css": ["injection/css/button.css"]
+            "css": ["assets/css/button.css"]
         }
     ],
     "background": {
@@ -43,8 +43,7 @@
                 "scripts/content-scripts/loader.js",
                 "scripts/modules/*",
                 "assets/site-logos/*",
-                "config.json",
-                "https://fonts.googleapis.com/css?family=Poppins:400&subset=latin,latin-ext"
+                "config.json"
             ],
             "matches": [ "<all_urls>" ]
         }

@@ -1,42 +1,60 @@
-import Fuse from './fuse6.6.2.js'
 
-function buildHTML(source, data, targetTitle) {
+const READ_TAG = ['MangaDex', 'Manganelo', 'NovelUpdates']
+const SOURCE_ASSETS = {
+    MangaDex: {
+        imgSrc: chrome.runtime.getURL('assets/site-logos/md-logo.svg'),
+        cssCode: 'mdex',
+        parser: parseMangaDex
+    },
+    Manganelo: {
+        imgSrc: chrome.runtime.getURL('assets/site-logos/manganelo-logo.png'),
+        cssCode: 'mglo',
+        parser: parseManganelo
+    },
+    NovelUpdates: {
+        imgSrc: chrome.runtime.getURL('assets/site-logos/novelupdates-logo.png'),
+        cssCode: 'nu',
+        parser: parseNovelUpdates
+    },
+    Anix: {
+        imgSrc: chrome.runtime.getURL('assets/site-logos/anix-logo.png'),
+        cssCode: 'anix',
+        parser: parseAnix,
+        episodeConvert: (url, epCount) => `${url}/ep-${epCount + 1}`
+    },
+    Aniwave: {
+        imgSrc: chrome.runtime.getURL('assets/site-logos/9anime-logo.png'),
+        cssCode: 'na',
+        parser: parseAniwave,
+        episodeConvert: (url, epCount) => `${url}/ep-${epCount + 1}`
+    },
+    GoGoAnime: {
+        imgSrc: chrome.runtime.getURL('assets/site-logos/gogoanime-logo.png'),
+        cssCode: 'gogo',
+        parser: parseGoGoAnime,
+        episodeConvert: (url, epCount) => `${url.replace('category/', '')}-episode-${epCount + 1}`
+    },
+    YouTube: {
+        imgSrc: chrome.runtime.getURL('assets/site-logos/youtube-logo.svg'),
+        cssCode: 'yt',
+        parser: parseYouTube
+    }
+}
+
+function buildHTML(sourceTarget, data, targetTitle, episodeNumber) {
 
     // Obtain targets
     const domTarget = document.getElementsByClassName('leftside')[0];
     const referenceObject = domTarget.children[1];
-    let malWatchButton = document.getElementById('broadcast-block')
-    var htmlButton;
+    const malWatchButton = document.getElementById('broadcast-block')
+    let htmlButton;
     
-    // Check if data is available
+    // Build buttons
     if ((!data) || (data && data.msg && data.msg === 'invalid')) { 
-        htmlButton = createButton(source, "")
+        htmlButton = createButton(sourceTarget, "", null)
     } else {
-        // Selectively build buttons
-        if (source === "MangaDex") {
-            const mangaID = removeMDNonOfficial(data)[0].id //searchData(data, targetTitle, "json");
-            htmlButton = createButton('MangaDex', `https://mangadex.org/title/${mangaID}`)
-        } else if (source === "Manganelo"){
-            const url = scrapeManganelo(data)
-            htmlButton = createButton('Manganelo', url)
-        } else if (source === "NovelUpdates") {
-            const url = `https://www.novelupdates.com/series/${data}/`
-            htmlButton = createButton('NovelUpdates', url)
-        } else if (source === "Anix") {
-            const url = scrapeAnix(data)
-            htmlButton = createButton('Anix', url)
-        } else if (source === "GoGoAnime") {
-            const url = scrapeGoGoAnime(data)
-            htmlButton = createButton('GoGoAnime', url)
-        } else if (source === "YouTube") {
-            const url = parseMALForumJSON(data)
-            htmlButton = createButton("YouTube", url)
-        } else if (source === "Aniwave") {
-            const url = scrapeAniwave(data)
-            htmlButton = createButton("Aniwave", url)
-        } else {
-            htmlButton = createButton(null, null)
-        }
+        const url = SOURCE_ASSETS[sourceTarget].parser(data)
+        htmlButton = createButton(sourceTarget, url, episodeNumber)
     }
 
     // Insertion
@@ -44,128 +62,14 @@ function buildHTML(source, data, targetTitle) {
     if (malWatchButton) { malWatchButton.remove() };
 }
 
-function createButton(context, url) {
+function createButton(sourceTarget, url, episodeNumber) {
+    const template = document.createElement('template');
+    const source = SOURCE_ASSETS[sourceTarget]
     const dataError = url === "";
-    var template = document.createElement('template');
-    var button;
-    var html;
-    if (context === 'MangaDex') {
-        const mdCatLogo = chrome.runtime.getURL('assets/site-logos/md-cat-logo.svg')
-        const mdLogo = chrome.runtime.getURL('assets/site-logos/md-logo.svg')
-        html = (!dataError) ? `
-        <a href="${url}" target="_blank" rel="noopener noreferrer" class="inj-a-tag">
-            <button class="inj-btn-tag mdex unblocked">
-                <p class="bt-text">Read on</p>
-                <img src="${mdCatLogo}" id="md-cat" />
-                <img src="${mdLogo}" id="md-logo" />
-            </button>
-        </a>`.trim() : `
-        <aclass="inj-a-tag">
-            <button class="inj-btn-tag mdex blocked">
-                <p class="bt-text">Read on</p>
-                <img src="${mdCatLogo}" id="md-cat" />
-                <img src="${mdLogo}" id="md-logo" />
-                <span class="block-pop">No Data on MangaDex</span>
-            </button>
-        </a>`.trim();
-    } else if (context === 'Manganelo') {
-        const mgloLogo = chrome.runtime.getURL('assets/site-logos/manganelo-logo.png')
-        html = (!dataError) ? `
-        <a href="${url}" target="_blank" rel="noopener noreferrer" class="inj-a-tag">
-            <button class="inj-btn-tag mglo unblocked">
-                <p class="bt-text">Read on</p>
-                <img src="${mgloLogo}" id="mglo-logo" />
-            </button>
-        </a>`.trim() : `
-        <a class="inj-a-tag">
-            <button class="inj-btn-tag mglo blocked">
-                <p class="bt-text">Read on</p>
-                <img src="${mgloLogo}" id="mglo-logo" />
-                <span class="block-pop">No Data on Manganelo</span>
-            </button>
-        </a>`.trim();
-    } else if (context === 'NovelUpdates') {
-        const nuLogo = chrome.runtime.getURL('assets/site-logos/novelupdates-logo.png')
-        html = (!dataError) ? `
-        <a href="${url}" target="_blank" rel="noopener noreferrer" class="inj-a-tag">
-            <button class="inj-btn-tag nu unblocked">
-                <p class="bt-text">Read on</p>
-                <img src="${nuLogo}" id="nu-logo" />
-            </button>
-        </a>`.trim() : `
-        <a class="inj-a-tag">
-            <button class="inj-btn-tag nu blocked">
-                <p class="bt-text">Read on</p>
-                <img src="${nuLogo}" id="nu-logo" />
-                <span class="block-pop">No Data on NovelUpdates</span>
-            </button>
-        </a>`.trim();
-    } else if (context === 'Aniwave') {
-            const nineAnimeLogo = chrome.runtime.getURL('assets/site-logos/9anime-logo.png')
-            html = (!dataError) ? `
-            <a href="${url}" target="_blank" rel="noopener noreferrer" class="inj-a-tag">
-                <button class="inj-btn-tag na unblocked">
-                    <p class="bt-text">Watch on</p>
-                    <img src="${nineAnimeLogo}" id="na-logo" />
-                </button>
-            </a>`.trim() : `
-            <a class="inj-a-tag">
-                <button class="inj-btn-tag na blocked">
-                    <p class="bt-text">Watch on</p>
-                    <img src="${nineAnimeLogo}" id="na-logo" />
-                    <span class="block-pop">No Data on 9anime</span>
-                </button>
-            </a>`.trim();
-    } else if (context === "GoGoAnime") {
-        const ggALogo = chrome.runtime.getURL('assets/site-logos/gogoanime-logo.png')
-        html = (!dataError) ? `
-        <a href="${url}" target="_blank" rel="noopener noreferrer" class="inj-a-tag">
-            <button class="inj-btn-tag gogo unblocked">
-                <p class="bt-text">Watch on</p>
-                <img src="${ggALogo}" id="gga-logo"/>
-            </button>
-        </a>`.trim() : `
-        <a class="inj-a-tag">
-            <button class="inj-btn-tag gogo blocked">
-                <p class="bt-text">Watch on</p>
-                <img src="${ggALogo}" id="gga-logo"/>
-                <span class="block-pop">No Data on GoGoAnime</span>
-            </button>
-        </a>`.trim();
-    } else if (context === "Anix") {
-        const anixLogo = chrome.runtime.getURL('assets/site-logos/anix-logo.png')
-        html = (!dataError) ? `
-        <a href="${url}" target="_blank" rel="noopener noreferrer" class="inj-a-tag">
-            <button class="inj-btn-tag anix unblocked">
-                <p class="bt-text">Watch on</p>
-                <img src="${anixLogo}" id="anix-logo"/>
-            </button>
-        </a>`.trim() : `
-        <a class="inj-a-tag">
-            <button class="inj-btn-tag anix blocked">
-                <p class="bt-text">Watch on</p>
-                <img src="${anixLogo}" id="anix-logo"/>
-                <span class="block-pop">No Data on YouTube</span>
-            </button>
-        </a>`.trim();
-    } else if (context === "YouTube") {
-        const ytLogo = chrome.runtime.getURL('assets/site-logos/youtube-logo.svg')
-        html = (!dataError) ? `
-        <a href="${url}" target="_blank" rel="noopener noreferrer" class="inj-a-tag">
-            <button class="inj-btn-tag yt unblocked">
-                <p class="bt-text">Watch on</p>
-                <img src="${ytLogo}" id="yt-logo"/>
-            </button>
-        </a>`.trim() : `
-        <a class="inj-a-tag">
-            <button class="inj-btn-tag yt blocked">
-                <p class="bt-text">Watch on</p>
-                <img src="${ytLogo}" id="yt-logo"/>
-                <span class="block-pop">No Data on YouTube</span>
-            </button>
-        </a>`.trim();
+    url = (episodeNumber) ? source.episodeConvert(url, episodeNumber) : url
+    let html;
 
-    } else {
+    if (!source) {  // General error 
         html = `
         <a class="inj-a-tag">
             <button class="inj-btn-tag err blocked">
@@ -173,72 +77,138 @@ function createButton(context, url) {
             <span class="block-pop">Feature not Currently Supported</span>
             </button>
         </a>`.trim();
+    } else if (!dataError) {  // Good response 
+        html = `
+        <a href="${url}" target="_blank" rel="noopener noreferrer" class="inj-a-tag">
+            <button class="inj-btn-tag ${source.cssCode} unblocked">
+                <p class="bt-text">${(READ_TAG.includes(sourceTarget) ? "Read" : "Watch")} on</p>
+                <img src="${source.imgSrc}" id="${source.cssCode}-logo" />
+            </button>
+        </a>`.trim()
+    } else {  // Source does not contain target
+        html = `
+        <a class="inj-a-tag">
+            <button class="inj-btn-tag ${source.cssCode} blocked">
+                <p class="bt-text">Watch on</p>
+                <img src="${source.imgSrc}" id="na-logo" />
+                <span class="block-pop">No Data on ${sourceTarget}</span>
+            </button>
+        </a>`.trim();
     }
+
     template.innerHTML = html;
-    button = template.content.firstChild;
-    return button;
+    return template.content.firstChild;
 }
 
-function scrapeAnix(stringHTML) {
-    // Load Anix DOM
-    var parser = new DOMParser();
-    var doc = parser.parseFromString(stringHTML, 'text/html');
 
+// ------ Parsers ------
+
+
+// --- Anime Parsers --- 
+
+function parseAnix(doc) {
     // Parse Anix DOM
     const animeList = doc.getElementsByClassName('ani-name');
     if (animeList.length !== 0) {
         return animeList[0].children[0].href
     } else {
-        console.log("An unexpected error has occured.")
-        return undefined
+        return ''
     }
 }
 
-function scrapeAniwave(stringHTML) {
-    // Load Aniwave DOM
-    var parser = new DOMParser();
-    var doc = parser.parseFromString(stringHTML, 'text/html');
-
+function parseAniwave(doc) {
     // Parse Aniwave DOM
     const animeList = doc.getElementsByClassName('d-title');
     if (animeList.length !== 0) {
         return animeList[0].href
     } else {
-        console.log("An unexpected error has occured.")
-        return undefined
+        return ''
     }
 }
 
-function scrapeGoGoAnime(stringHTML) {
-    // Load GoGoAnime DOM
-    var parser = new DOMParser();
-    var doc = parser.parseFromString(stringHTML, 'text/html');
-
+function parseGoGoAnime(doc) {
     // Parse DOM for non dub results
     const animeList = doc.getElementsByClassName('name')
-    var animeLink;
-    for (var i = 0; i < animeList.length; i ++) {
+    let animeLink;
+    for (let i = 0; i < animeList.length; i ++) {
         let anime = animeList[i];
         if (!(anime.innerText.includes("Dub") || anime.innerText.includes("dub"))) {
             animeLink = anime.children[0].href;
             break
         }
     }
-    return `https://gogoanimehd.io/${animeLink.replace("https://myanimelist.net/", "")}`
+    return (animeLink) ? 
+        `https://gogoanimehd.io/${animeLink.replace("https://myanimelist.net/", "")}`
+        : ''
 }
 
-function scrapeManganelo(stringHTML) {
-    // Load GoGoAnime DOM
-    var parser = new DOMParser();
-    var doc = parser.parseFromString(stringHTML, 'text/html');
+// --- Manga Parsers ---
 
-    // Parse DOM for non dub results
-    return doc.getElementsByClassName('item-title')[0].href;
+function parseMangaDex(data) {
+    // Removes any data that has one of the banned tags
+    const bannedTags = ["Oneshot", "Doujinshi"];
+    let approvedData = [];
+    for (let i = 0; i < data['data'].length; i ++) {
+        let notBanned = true;
+        let dataEntry = data['data'][i]
+        for (let j = 0; j < dataEntry["attributes"]["tags"].length; j ++) {
+            if (bannedTags.includes(dataEntry["attributes"]["tags"][j]["attributes"]["name"]["en"])) {
+                notBanned = false;
+                break;
+            }
+        }
+        if (notBanned) { approvedData.push(data['data'][i]) };
+    }
+
+    // Builds URL if there are any remaining results
+    return (approvedData) ?
+        `https://mangadex.org/title/${approvedData[0].id}`
+        : ''
 }
 
-function parseMALForumJSON(jsonData) {
+function parseManganelo(doc) {
+    const mangaItems = doc.getElementsByClassName('item-title');
+    return (mangaItems) ?
+        mangaItems[0].href
+        : ''
+}
+
+// --- Novel Parsers ---
+
+function parseNovelUpdates(data) {
+    // (From MD parser)
+    const bannedTags = ["Oneshot", "Doujinshi"];
+    let approvedData = [];
+    for (let i = 0; i < data['data'].length; i ++) {
+        let notBanned = true;
+        let dataEntry = data['data'][i]
+        for (let j = 0; j < dataEntry["attributes"]["tags"].length; j ++) {
+            if (bannedTags.includes(dataEntry["attributes"]["tags"][j]["attributes"]["name"]["en"])) {
+                notBanned = false;
+                break;
+            }
+        }
+        if (notBanned) { approvedData.push(data['data'][i]) };
+    }
+
+    // Obtain NovelUpdates link from MD page
+    if (approvedData) {
+        const primarySlugs = approvedData[0]['attributes']['links']
+        const novelUpdatesSlug = (Object.hasOwn(primarySlugs, "nu")) ?
+            primarySlugs['nu']
+            : ''
+        return (novelUpdatesSlug) ?
+            `https://www.novelupdates.com/series/${novelUpdatesSlug}`
+            : ''
+    }
+    return ''
+}
+
+// --- Music Parsers ---
+
+function parseYouTube(jsonData) {
     let youtubeVID;
-    for (var i = 0; i < jsonData['data']['posts'].length; i ++) {
+    for (let i = 0; i < jsonData['data']['posts'].length; i ++) {
         const textBody = jsonData['data']['posts'][i]['body'];
         if (textBody.includes('[yt]') && textBody.includes('[/yt]')) {
             youtubeVID = textBody.match(/\[yt\](.+)\[\/yt\]/gm)[0]
@@ -253,36 +223,6 @@ function parseMALForumJSON(jsonData) {
         }
     };
     return "";
-}
-
-// Searches through json to find optimal result; Uses Fuse
-function searchData(data, targetTitle, dataType) {
-    if (dataType === "json") {
-        const constraints = { includeScore: true, keys: [ "attributes.title.en" ] }
-        const fuse = new Fuse(data['data'], constraints)
-        const result = fuse.search(targetTitle)
-        return (result.length === 0) ? data['data'][0].id : result[0].item.id;
-    }
-}
-
-// Removes any data that has one of the banned tags
-function removeMDNonOfficial(data) {
-    const bannedTags = ["Oneshot", "Doujinshi"];
-    var approvedData = [];
-    var i;
-    for (i = 0; i < data['data'].length; i ++) {
-        var j;
-        var notBanned = true;
-        var dataEntry = data['data'][i]
-        for (j = 0; j < dataEntry["attributes"]["tags"].length; j ++) {
-            if (bannedTags.includes(dataEntry["attributes"]["tags"][j]["attributes"]["name"]["en"])) {
-                notBanned = false;
-                break;
-            }
-        }
-        if (notBanned) { approvedData.push(data['data'][i]) };
-    }
-    return approvedData;
 }
 
 export default buildHTML
