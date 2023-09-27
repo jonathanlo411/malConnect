@@ -33,4 +33,4 @@ List of non-affiliated 3rd party sites that malConnect queries.
 
 ## Example
 **Buttons located beneath the cover art*
-![](https://cdn.discordapp.com/attachments/942218891952783421/1152678465196282018/carousel.gif)
+![](https://cdn.discordapp.com/attachments/942218891952783421/1152748517304053800/ezgif.com-gif-maker.gif?ex=6514bb37&is=651369b7&hm=6d8cb9c6f710513dc144d9b21944c88e551edf70d2ba421c6b25992b6e2a40d0&)
